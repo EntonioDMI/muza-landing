@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import LyricsSection from "@/components/LyricsSection";
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
         <div className="container">
           <Hero />
         </div>
+        <LyricsSection />
       </main>
     </>
   );

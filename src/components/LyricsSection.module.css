@@ -1,0 +1,73 @@
+.section {
+  /* высота задаёт «длину трека»: чем больше, тем медленнее листаются строки */
+  min-height: 280vh;
+  position: relative;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-8);
+}
+
+/* Единственный микро-ярлык на лендинге — цитата из UI приложения */
+.caption {
+  font-size: var(--fs-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(14px, 2.6vh, 26px);
+  text-align: center;
+}
+
+.line {
+  font-size: clamp(1.55rem, 4.6vw, 3.4rem);
+  line-height: var(--lh-lyrics);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.01em;
+  transform-origin: center;
+  transition:
+    color var(--dur-slow) var(--ease-out),
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+}
+
+.line[data-dist="0"] {
+  color: var(--text-1);
+  transform: scale(1);
+}
+
+.line[data-dist="1"] {
+  color: var(--text-2);
+  transform: scale(0.9);
+}
+
+.line[data-dist="2"] {
+  color: var(--text-3);
+  transform: scale(0.8);
+  opacity: 0.75;
+}
+
+.outro {
+  display: flex;
+  justify-content: center;
+  padding: 0 var(--sp-5) var(--sp-10);
+}
+
+.outroText {
+  max-width: 58ch;
+  text-align: center;
+  font-size: var(--fs-strong);
+  color: var(--text-2);
+}
