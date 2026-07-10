@@ -89,6 +89,13 @@ export const DEMO_TRACKS: DemoTrack[] = [
   },
 ];
 
+/** Четвёртая плитка полки — срезается краем, как в приложении (полка скроллится) */
+export const EXTRA_TILE = {
+  title: "Один процент",
+  artist: "ОКТАВА",
+  cover: "/covers/cover-4.png",
+};
+
 /** Плейлисты сайдбара и полки «Собрано для тебя» — как в приложении */
 export const PLAYLISTS: DemoCollection[] = [
   { id: "p1", name: "Ночной вайб", meta: "42 трека", cover: "/covers/cover-5.png" },

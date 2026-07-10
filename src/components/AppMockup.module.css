@@ -203,6 +203,19 @@
   gap: 0.9em;
 }
 
+/* Полка со «скроллом»: 3 плитки + четвёртая срезана краем */
+
+.tilesScroll {
+  display: flex;
+  gap: 0.9em;
+  overflow: hidden;
+}
+
+.tilesScroll .tile {
+  flex: 0 0 29.5%;
+  min-width: 0;
+}
+
 .tile {
   background: var(--surface-2);
   border-radius: calc(var(--r-md) * 0.8);
@@ -366,16 +379,20 @@
 /* Синхротекст в плашке — как в приложении: активная строка акцентом */
 
 .lyricsCard {
-  --slot: 2.7em;
+  --slot: 3.1em;
   background: var(--surface-2);
   border-radius: calc(var(--r-md) * 0.8);
-  padding: 0.9em 1em;
+  padding: 0.9em 1.1em;
   margin-top: 0.5em;
+  flex: 1;
+  display: flex;
+  align-items: center;
   transition: border-radius var(--dur-base) var(--ease-out);
 }
 
 .lyricsView {
   height: calc(var(--slot) * 5);
+  width: 100%;
   overflow: hidden;
 }
 
@@ -390,7 +407,7 @@
   flex: none;
   display: flex;
   align-items: center;
-  font-size: 0.95em;
+  font-size: 1.05em;
   line-height: var(--lh-lyrics);
   font-weight: var(--fw-semibold);
   transform-origin: left center;
@@ -480,7 +497,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.4em;
-  min-width: 20em;
+  min-width: 26em;
 }
 
 .pbControls {

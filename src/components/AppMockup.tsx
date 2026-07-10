@@ -21,7 +21,7 @@ import {
   SlidersHorizontal,
   Volume2,
 } from "lucide-react";
-import { DEMO_TRACKS, PLAYLISTS, formatTime } from "@/lib/demo";
+import { DEMO_TRACKS, EXTRA_TILE, PLAYLISTS, formatTime } from "@/lib/demo";
 import s from "./AppMockup.module.css";
 
 /** Длительность «трека» в демо-цикле, сек */
@@ -125,7 +125,7 @@ export default function AppMockup() {
             </div>
 
             <div className={s.shelfHead}>Продолжить слушать</div>
-            <div className={s.tiles}>
+            <div className={s.tilesScroll}>
               {DEMO_TRACKS.map((t, i) => (
                 <div key={t.id} className={s.tile}>
                   <span className={s.tileCoverBox}>
@@ -141,6 +141,15 @@ export default function AppMockup() {
                   <span className={s.tileSub}>{t.artist}</span>
                 </div>
               ))}
+              {/* срезанная краем плитка — полка «скроллится», как в приложении */}
+              <div className={s.tile} aria-hidden="true">
+                <span className={s.tileCoverBox}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={EXTRA_TILE.cover} alt="" className={s.tileCover} />
+                </span>
+                <span className={s.tileName}>{EXTRA_TILE.title}</span>
+                <span className={s.tileSub}>{EXTRA_TILE.artist}</span>
+              </div>
             </div>
 
             <div className={s.shelfHead}>
