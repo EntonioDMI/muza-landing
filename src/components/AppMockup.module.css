@@ -558,9 +558,9 @@
 .pbRight {
   display: flex;
   align-items: center;
-  /* как в приложении: кластер иконок ближе к транспорту, не прижат к краю */
+  /* как в приложении: кластер ближе к транспорту, отступы между иконками широкие */
   justify-content: center;
-  gap: 1.1em;
+  gap: 1.9em;
   color: var(--text-2);
 }
 
@@ -581,8 +581,8 @@
 }
 
 .pbVol {
-  width: 4.5em;
-  height: 0.4em;
+  width: 7.5em;
+  height: 0.45em;
   border-radius: var(--r-pill);
   background: var(--surface-3);
   overflow: hidden;
