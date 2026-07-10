@@ -1,0 +1,90 @@
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: clamp(120px, 18vh, 180px);
+}
+
+/* Каскад входа: заголовок → подзаголовок → кнопки → сноска → мокап */
+
+.title,
+.sub,
+.actions,
+.note,
+.mockupSlot {
+  animation: heroIn var(--dur-slow) var(--ease-out) both;
+}
+
+.sub {
+  animation-delay: 80ms;
+}
+
+.actions {
+  animation-delay: 160ms;
+}
+
+.note {
+  animation-delay: 240ms;
+}
+
+.mockupSlot {
+  animation-delay: 320ms;
+}
+
+@keyframes heroIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  font-size: clamp(2.1rem, 5.2vw, 3.9rem);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-display);
+  max-width: 16ch;
+}
+
+.titleAccent {
+  color: var(--accent-text);
+  transition: color var(--dur-base) var(--ease-out);
+}
+
+.sub {
+  margin-top: var(--sp-6);
+  max-width: 52ch;
+  font-size: var(--fs-strong);
+  color: var(--text-2);
+}
+
+.actions {
+  margin-top: var(--sp-7);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-4);
+}
+
+.btnIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.note {
+  margin-top: var(--sp-4);
+  font-size: var(--fs-caption);
+  color: var(--text-3);
+}
+
+.mockupSlot {
+  margin-top: clamp(48px, 7vh, 72px);
+  width: min(100%, 1040px);
+}

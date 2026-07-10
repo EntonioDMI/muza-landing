@@ -1,0 +1,17 @@
+/* Скрываем до появления ТОЛЬКО при работающем JS —
+   иначе страница без скриптов осталась бы слепой. */
+
+@media (scripting: enabled) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity var(--dur-slow) var(--ease-out),
+      transform var(--dur-slow) var(--ease-out);
+  }
+
+  .shown {
+    opacity: 1;
+    transform: none;
+  }
+}

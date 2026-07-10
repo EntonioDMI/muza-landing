@@ -5,6 +5,7 @@
 .mockup {
   font-size: clamp(7px, 0.55vw + 4.6px, 11px);
   width: 100%;
+  text-align: left;
   user-select: none;
   pointer-events: none;
 }

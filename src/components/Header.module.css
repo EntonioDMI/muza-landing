@@ -1,0 +1,90 @@
+.header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 10;
+  padding: var(--sp-3) clamp(12px, 2.5vw, 24px) 0;
+  animation: headerIn var(--dur-slow) var(--ease-out) both;
+}
+
+@keyframes headerIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.inner {
+  max-width: 1160px;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-6);
+  padding: var(--sp-2) var(--sp-3) var(--sp-2) var(--sp-5);
+  background: var(--glass-panel);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border-radius: var(--r-lg);
+  transition: border-radius var(--dur-base) var(--ease-out);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-right: auto;
+}
+
+.glyph {
+  width: 26px;
+  height: 26px;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-strong);
+  letter-spacing: var(--ls-display);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.nav a {
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--r-pill);
+  color: var(--text-2);
+  font-weight: var(--fw-medium);
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out);
+}
+
+.nav a:hover {
+  background: var(--surface-2);
+  color: var(--text-1);
+}
+
+.cta {
+  min-height: 42px;
+  padding: 0 var(--sp-5);
+  font-size: var(--fs-body);
+}
+
+.ctaIcon {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 720px) {
+  .nav {
+    display: none;
+  }
+}
