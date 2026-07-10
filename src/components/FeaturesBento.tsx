@@ -1,4 +1,3 @@
-import { Moon, Shuffle } from "lucide-react";
 import Reveal from "./Reveal";
 import s from "./FeaturesBento.module.css";
 
@@ -41,7 +40,7 @@ export default function FeaturesBento() {
               </span>
               <span className={s.rpcMeta}>
                 <span className={s.rpcLine1}>Играет в Muza</span>
-                <span className={s.rpcLine2}>Стеклянный дом — Никта</span>
+                <span className={s.rpcLine2}>Стеклянный дом — Мира</span>
               </span>
             </div>
             <h3 className={s.cardTitle}>Discord видит, что играет</h3>
@@ -55,12 +54,8 @@ export default function FeaturesBento() {
         {/* Умный шаффл */}
         <Reveal className={s.spanNarrow}>
           <article className={s.card}>
-            <div className={s.shuffleScene} aria-hidden="true">
-              <Shuffle strokeWidth={1.75} className={s.shuffleIcon} />
-              <span className={`${s.shuffleChip} ${s.chipA}`} />
-              <span className={`${s.shuffleChip} ${s.chipB}`} />
-              <span className={`${s.shuffleChip} ${s.chipC}`} />
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/art/shuffle.webp" alt="" className={s.artScene} loading="lazy" />
             <h3 className={s.cardTitle}>Умный шаффл</h3>
             <p className={s.cardText}>
               Не крутит одно и то же: недавние треки отдыхают, очередь держит
@@ -89,10 +84,8 @@ export default function FeaturesBento() {
         {/* Сон-таймер */}
         <Reveal delay={120} className={s.spanNarrow}>
           <article className={s.card}>
-            <div className={s.moonScene} aria-hidden="true">
-              <Moon strokeWidth={1.75} className={s.moonIcon} />
-              <span className={s.moonPill}>до конца трека</span>
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/art/sleep-moon.webp" alt="" className={s.artScene} loading="lazy" />
             <h3 className={s.cardTitle}>Сон-таймер</h3>
             <p className={s.cardText}>
               15, 30, 60 минут или до конца трека — музыка выключится сама, а

@@ -1,0 +1,10 @@
+.wrap {
+  padding-block: var(--sp-8) 0;
+}
+
+.img {
+  width: 100%;
+  display: block;
+  border-radius: var(--r-lg);
+  transition: border-radius var(--dur-base) var(--ease-out);
+}

@@ -149,61 +149,15 @@
   text-overflow: ellipsis;
 }
 
-/* Шаффл: плашки-треки меняются местами на hover */
+/* Спот-арты (Recraft): плоские сцены в палитре токенов, оформлены как обложки */
 
-.shuffleScene {
-  position: relative;
-  height: 96px;
+.artScene {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+  border-radius: var(--r-md);
   margin-bottom: var(--sp-4);
-}
-
-.shuffleIcon {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 22px;
-  height: 22px;
-  color: var(--accent-text);
-}
-
-.shuffleChip {
-  position: absolute;
-  left: 0;
-  height: 22px;
-  border-radius: var(--r-pill);
-  background: var(--surface-3);
-  transition:
-    transform 500ms var(--ease-out),
-    background-color var(--dur-base) var(--ease-out);
-}
-
-.chipA {
-  top: 0;
-  width: 62%;
-}
-
-.chipB {
-  top: 34px;
-  width: 44%;
-  background: var(--accent-soft);
-}
-
-.chipC {
-  top: 68px;
-  width: 54%;
-}
-
-.card:hover .chipA {
-  transform: translateY(68px);
-}
-
-.card:hover .chipB {
-  transform: translateY(-34px);
-  background: var(--accent);
-}
-
-.card:hover .chipC {
-  transform: translateY(-34px);
+  transition: border-radius var(--dur-base) var(--ease-out);
 }
 
 /* Хоткеи */
@@ -252,35 +206,6 @@
 .card:hover .keysScene kbd:nth-child(4) {
   transform: translateY(-3px);
   transition-delay: 180ms;
-}
-
-/* Сон-таймер */
-
-.moonScene {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-4);
-  height: 96px;
-  margin-bottom: var(--sp-4);
-}
-
-.moonIcon {
-  width: 34px;
-  height: 34px;
-  color: var(--accent-text);
-  transition: transform 600ms var(--ease-out);
-}
-
-.card:hover .moonIcon {
-  transform: rotate(-14deg);
-}
-
-.moonPill {
-  font-size: var(--fs-caption);
-  color: var(--text-2);
-  background: var(--surface-3);
-  border-radius: var(--r-pill);
-  padding: var(--sp-2) var(--sp-4);
 }
 
 /* ── Адаптив ── */

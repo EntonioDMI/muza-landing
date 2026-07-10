@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import LyricsSection from "@/components/LyricsSection";
+import CityScene from "@/components/CityScene";
 import FeaturesBento from "@/components/FeaturesBento";
 import CustomizeSection from "@/components/CustomizeSection";
 import OpenSourceSection from "@/components/OpenSourceSection";
@@ -16,6 +17,7 @@ export default function Home() {
           <Hero />
         </div>
         <LyricsSection />
+        <CityScene />
         <FeaturesBento />
         <CustomizeSection />
         <OpenSourceSection />
