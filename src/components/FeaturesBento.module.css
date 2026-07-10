@@ -1,0 +1,300 @@
+.section {
+  padding-block: var(--sp-10) calc(var(--sp-10) * 1.4);
+}
+
+.title {
+  font-size: clamp(1.6rem, 3.2vw, 2.25rem);
+  font-weight: var(--fw-bold);
+  margin-bottom: var(--sp-8);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--sp-5);
+}
+
+.spanWide {
+  grid-column: span 3;
+}
+
+.spanNarrow {
+  grid-column: span 2;
+}
+
+.card {
+  height: 100%;
+  background: var(--surface-2);
+  border-radius: var(--r-lg);
+  padding: var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    border-radius var(--dur-base) var(--ease-out);
+}
+
+.card:hover {
+  background: var(--surface-3);
+}
+
+.cardTitle {
+  font-size: var(--fs-title);
+  font-weight: var(--fw-semibold);
+  margin-top: auto;
+}
+
+.cardText {
+  color: var(--text-2);
+  max-width: 46ch;
+}
+
+/* ── Мини-сцены ── */
+
+/* Эквалайзер: полосы приподнимаются на hover карточки */
+
+.eqScene {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sp-2);
+  height: 96px;
+  margin-bottom: var(--sp-4);
+}
+
+.eqScene i {
+  flex: 1;
+  max-width: 26px;
+  background: var(--accent-soft);
+  border-radius: var(--r-pill);
+  transition:
+    height 600ms var(--ease-out),
+    background-color var(--dur-base) var(--ease-out);
+}
+
+.eqScene i:nth-child(odd) {
+  transition-delay: 60ms;
+}
+
+.card:hover .eqScene i {
+  background: var(--accent);
+}
+
+.card:hover .eqScene i:nth-child(1) { height: 70% !important; }
+.card:hover .eqScene i:nth-child(2) { height: 45% !important; }
+.card:hover .eqScene i:nth-child(3) { height: 85% !important; }
+.card:hover .eqScene i:nth-child(4) { height: 58% !important; }
+.card:hover .eqScene i:nth-child(5) { height: 92% !important; }
+.card:hover .eqScene i:nth-child(6) { height: 50% !important; }
+.card:hover .eqScene i:nth-child(7) { height: 78% !important; }
+.card:hover .eqScene i:nth-child(8) { height: 62% !important; }
+.card:hover .eqScene i:nth-child(9) { height: 88% !important; }
+.card:hover .eqScene i:nth-child(10) { height: 54% !important; }
+
+/* Discord-активность */
+
+.rpcScene {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+  padding: var(--sp-4);
+  margin-bottom: var(--sp-4);
+  transition: border-radius var(--dur-base) var(--ease-out);
+}
+
+.rpcDot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--r-pill);
+  background: #3ba55d;
+  flex: none;
+}
+
+.rpcCoverWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-xs);
+  overflow: hidden;
+  flex: none;
+}
+
+.rpcCover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.card:hover .rpcCover {
+  transform: rotate(6deg) scale(1.08);
+}
+
+.rpcMeta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rpcLine1 {
+  font-size: var(--fs-caption);
+  color: var(--text-3);
+}
+
+.rpcLine2 {
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Шаффл: плашки-треки меняются местами на hover */
+
+.shuffleScene {
+  position: relative;
+  height: 96px;
+  margin-bottom: var(--sp-4);
+}
+
+.shuffleIcon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 22px;
+  height: 22px;
+  color: var(--accent-text);
+}
+
+.shuffleChip {
+  position: absolute;
+  left: 0;
+  height: 22px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+  transition:
+    transform 500ms var(--ease-out),
+    background-color var(--dur-base) var(--ease-out);
+}
+
+.chipA {
+  top: 0;
+  width: 62%;
+}
+
+.chipB {
+  top: 34px;
+  width: 44%;
+  background: var(--accent-soft);
+}
+
+.chipC {
+  top: 68px;
+  width: 54%;
+}
+
+.card:hover .chipA {
+  transform: translateY(68px);
+}
+
+.card:hover .chipB {
+  transform: translateY(-34px);
+  background: var(--accent);
+}
+
+.card:hover .chipC {
+  transform: translateY(-34px);
+}
+
+/* Хоткеи */
+
+.keysScene {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+
+.keysScene kbd {
+  font-family: var(--font-ui);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-medium);
+  color: var(--text-2);
+  background: var(--surface-3);
+  border-radius: var(--r-xs);
+  padding: var(--sp-2) var(--sp-3);
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    background-color var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out);
+}
+
+.card:hover .keysScene kbd {
+  background: var(--surface-4);
+  color: var(--text-1);
+}
+
+.card:hover .keysScene kbd:nth-child(1) {
+  transform: translateY(-3px);
+  transition-delay: 0ms;
+}
+
+.card:hover .keysScene kbd:nth-child(2) {
+  transform: translateY(-3px);
+  transition-delay: 60ms;
+}
+
+.card:hover .keysScene kbd:nth-child(3) {
+  transform: translateY(-3px);
+  transition-delay: 120ms;
+}
+
+.card:hover .keysScene kbd:nth-child(4) {
+  transform: translateY(-3px);
+  transition-delay: 180ms;
+}
+
+/* Сон-таймер */
+
+.moonScene {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  height: 96px;
+  margin-bottom: var(--sp-4);
+}
+
+.moonIcon {
+  width: 34px;
+  height: 34px;
+  color: var(--accent-text);
+  transition: transform 600ms var(--ease-out);
+}
+
+.card:hover .moonIcon {
+  transform: rotate(-14deg);
+}
+
+.moonPill {
+  font-size: var(--fs-caption);
+  color: var(--text-2);
+  background: var(--surface-3);
+  border-radius: var(--r-pill);
+  padding: var(--sp-2) var(--sp-4);
+}
+
+/* ── Адаптив ── */
+
+@media (max-width: 960px) {
+  .spanWide,
+  .spanNarrow {
+    grid-column: span 3;
+  }
+}
+
+@media (max-width: 620px) {
+  .spanWide,
+  .spanNarrow {
+    grid-column: span 6;
+  }
+}
