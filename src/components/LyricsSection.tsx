@@ -16,7 +16,7 @@ const LINES = [
 ];
 
 export default function LyricsSection() {
-  const secRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function LyricsSection() {
     const onScroll = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
-        const el = secRef.current;
+        const el = trackRef.current;
         if (!el) return;
         const total = el.offsetHeight - window.innerHeight;
         const p = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / total));
@@ -42,18 +42,22 @@ export default function LyricsSection() {
   }, []);
 
   return (
-    <section ref={secRef} className={s.section} id="lyrics">
-      <div className={s.sticky}>
-        <div className={s.caption}>Сейчас играет</div>
-        <div className={s.lines}>
-          {LINES.map((line, i) => {
-            const d = Math.min(Math.abs(i - active), 2);
-            return (
-              <div key={line} className={s.line} data-dist={d}>
-                {line}
-              </div>
-            );
-          })}
+    <section className={s.section} id="lyrics">
+      {/* «Трек» задаёт длину скролла; sticky-экран липнет внутри него,
+          поэтому аутро ниже никогда не наезжает на строки */}
+      <div ref={trackRef} className={s.track}>
+        <div className={s.sticky}>
+          <div className={s.caption}>Сейчас играет</div>
+          <div className={s.lines}>
+            {LINES.map((line, i) => {
+              const d = Math.min(Math.abs(i - active), 2);
+              return (
+                <div key={line} className={s.line} data-dist={d}>
+                  {line}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
       <div className={s.outro}>
