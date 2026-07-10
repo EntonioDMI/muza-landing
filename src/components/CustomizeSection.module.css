@@ -60,6 +60,73 @@
   height: 20px;
 }
 
+.swatchCustom {
+  background: var(--surface-3);
+  color: var(--text-2);
+}
+
+.swatchCustom:hover {
+  color: var(--text-1);
+}
+
+.swatchPipette {
+  width: 18px;
+  height: 18px;
+}
+
+.colorInput {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Слайдер плотности стекла — плоский, пилюля + акцентный бегунок */
+
+.range {
+  appearance: none;
+  -webkit-appearance: none;
+  width: min(100%, 320px);
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+  outline-offset: var(--focus-offset);
+}
+
+.range::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  border: none;
+  transition: background-color var(--dur-base) var(--ease-out);
+}
+
+.range::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  border: none;
+}
+
+.moreChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+.moreChips span {
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: var(--fs-caption);
+}
+
 .chips {
   display: flex;
   flex-wrap: wrap;

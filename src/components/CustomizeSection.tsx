@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Check, Play } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Check, Pipette, Play } from "lucide-react";
 import Reveal from "./Reveal";
 import s from "./CustomizeSection.module.css";
 
-/* Живая кастомизация: свотчи и пресеты меняют data-accent / data-radius
-   на <html> — перекрашивается весь лендинг, включая мокап в герое. */
+/* Живая кастомизация: свотчи/пипетка/пресеты меняют переменные на <html> —
+   перекрашивается весь лендинг, включая мокап в герое.
+   Деривация оттенков своего цвета — как lib/accent.ts в приложении. */
 
 const ACCENTS = [
   { id: "sky", color: "#3b82f6", label: "Небо" },
@@ -20,17 +21,53 @@ const RADII = [
   { id: "round", label: "Круглые" },
 ] as const;
 
+/** Сдвиг цвета к белому: hover/текстовый оттенок акцента */
+function mixWhite(hex: string, amt: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  const m = (c: number) => Math.round(c + (255 - c) * amt);
+  return `rgb(${m((n >> 16) & 255)}, ${m((n >> 8) & 255)}, ${m(n & 255)})`;
+}
+
+function softOf(hex: string): string {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, 0.16)`;
+}
+
 export default function CustomizeSection() {
   const [accent, setAccent] = useState<string>("sky");
+  const [custom, setCustom] = useState<string | null>(null);
   const [radius, setRadius] = useState<string>("soft");
+  const [glass, setGlass] = useState(62);
+  const colorRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const el = document.documentElement;
-    if (accent === "sky") delete el.dataset.accent;
-    else el.dataset.accent = accent;
+    if (custom) {
+      delete el.dataset.accent;
+      el.style.setProperty("--accent", custom);
+      el.style.setProperty("--accent-hover", mixWhite(custom, 0.18));
+      el.style.setProperty("--accent-text", mixWhite(custom, 0.42));
+      el.style.setProperty("--accent-soft", softOf(custom));
+    } else {
+      for (const p of ["--accent", "--accent-hover", "--accent-text", "--accent-soft"])
+        el.style.removeProperty(p);
+      if (accent === "sky") delete el.dataset.accent;
+      else el.dataset.accent = accent;
+    }
     if (radius === "soft") delete el.dataset.radius;
     else el.dataset.radius = radius;
-  }, [accent, radius]);
+  }, [accent, custom, radius]);
+
+  useEffect(() => {
+    const el = document.documentElement;
+    if (glass === 62) {
+      el.style.removeProperty("--glass-panel");
+      el.style.removeProperty("--blur-glass");
+    } else {
+      el.style.setProperty("--glass-panel", `rgba(23, 22, 20, ${(glass / 100).toFixed(2)})`);
+      el.style.setProperty("--blur-glass", `${Math.round(8 + glass * 0.4)}px`);
+    }
+  }, [glass]);
 
   return (
     <section className={`container ${s.section}`}>
@@ -39,9 +76,10 @@ export default function CustomizeSection() {
           <div>
             <h2 className={s.title}>Твоя Muza</h2>
             <p className={s.text}>
-              Один акцент на всё приложение, скругления на твой вкус и плотность
-              стекла — Muza выглядит так, как хочешь ты. Попробуй прямо здесь:
-              сайт перекрасится вместе с мокапом.
+              Акцент — хоть фирменный, хоть свой цвет пипеткой. Скругления,
+              плотность стекла, фон, собственный CSS и темы из маркетплейса —
+              Muza выглядит так, как хочешь ты. Часть можно попробовать прямо
+              здесь: сайт перекрасится вместе с мокапом.
             </p>
 
             <div className={s.groupLabel}>Акцент</div>
@@ -51,15 +89,42 @@ export default function CustomizeSection() {
                   key={a.id}
                   type="button"
                   role="radio"
-                  aria-checked={accent === a.id}
+                  aria-checked={!custom && accent === a.id}
                   aria-label={a.label}
                   className={s.swatch}
                   style={{ background: a.color }}
-                  onClick={() => setAccent(a.id)}
+                  onClick={() => {
+                    setCustom(null);
+                    setAccent(a.id);
+                  }}
                 >
-                  {accent === a.id && <Check strokeWidth={2.5} className={s.swatchCheck} />}
+                  {!custom && accent === a.id && (
+                    <Check strokeWidth={2.5} className={s.swatchCheck} />
+                  )}
                 </button>
               ))}
+              <button
+                type="button"
+                className={`${s.swatch} ${s.swatchCustom}`}
+                style={custom ? { background: custom } : undefined}
+                aria-label="Свой цвет"
+                onClick={() => colorRef.current?.click()}
+              >
+                {custom ? (
+                  <Check strokeWidth={2.5} className={s.swatchCheck} />
+                ) : (
+                  <Pipette strokeWidth={1.75} className={s.swatchPipette} />
+                )}
+              </button>
+              <input
+                ref={colorRef}
+                type="color"
+                defaultValue="#8b5cf6"
+                className={s.colorInput}
+                aria-hidden="true"
+                tabIndex={-1}
+                onInput={(e) => setCustom((e.target as HTMLInputElement).value)}
+              />
             </div>
 
             <div className={s.groupLabel}>Скругления</div>
@@ -77,6 +142,24 @@ export default function CustomizeSection() {
                 </button>
               ))}
             </div>
+
+            <div className={s.groupLabel}>Плотность стекла</div>
+            <input
+              type="range"
+              min={30}
+              max={90}
+              value={glass}
+              onChange={(e) => setGlass(Number(e.target.value))}
+              className={s.range}
+              aria-label="Плотность стекла"
+            />
+
+            <div className={s.groupLabel}>А в приложении ещё</div>
+            <div className={s.moreChips}>
+              <span>Фон</span>
+              <span>Свой CSS</span>
+              <span>Темы из маркетплейса</span>
+            </div>
           </div>
         </Reveal>
 
@@ -88,15 +171,15 @@ export default function CustomizeSection() {
               <span className={s.pvPlay}>
                 <Play strokeWidth={1.75} fill="currentColor" />
               </span>
-              <span className={s.pvName}>Энергия</span>
-              <span className={s.pvSub}>подборка</span>
+              <span className={s.pvName}>Ночной вайб</span>
+              <span className={s.pvSub}>42 трека</span>
             </div>
             <div className={s.pvBar}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/covers/cover-3.png" alt="" className={s.pvBarCover} />
               <span className={s.pvBarMeta}>
-                <span className={s.pvBarTitle}>Северное сияние</span>
-                <span className={s.pvBarArtist}>Пасмурно</span>
+                <span className={s.pvBarTitle}>Стеклянный дом</span>
+                <span className={s.pvBarArtist}>Мира</span>
               </span>
               <span className={s.pvTrack}>
                 <span className={s.pvFill} />
