@@ -1,0 +1,213 @@
+.section {
+  padding-block: var(--sp-10);
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(28px, 5vw, 64px);
+  align-items: center;
+  background: var(--surface-1);
+  border-radius: var(--r-xl);
+  padding: clamp(24px, 4.5vw, 56px);
+  transition: border-radius var(--dur-base) var(--ease-out);
+}
+
+.title {
+  font-size: clamp(1.6rem, 3.2vw, 2.25rem);
+  font-weight: var(--fw-bold);
+}
+
+.text {
+  margin-top: var(--sp-4);
+  color: var(--text-2);
+  max-width: 48ch;
+}
+
+.groupLabel {
+  margin-top: var(--sp-7);
+  margin-bottom: var(--sp-3);
+  font-size: var(--fs-caption);
+  color: var(--text-3);
+}
+
+.swatches {
+  display: flex;
+  gap: var(--sp-4);
+}
+
+.swatch {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-pill);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.swatch:hover {
+  transform: scale(1.08);
+}
+
+.swatch:active {
+  transform: scale(var(--press-scale));
+}
+
+.swatchCheck {
+  width: 20px;
+  height: 20px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+.chip {
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-weight: var(--fw-medium);
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.chip:hover {
+  background: var(--surface-3);
+  color: var(--text-1);
+}
+
+.chip:active {
+  transform: scale(var(--press-scale));
+}
+
+.chipOn {
+  background: var(--surface-4);
+  color: var(--accent-text);
+}
+
+/* Превью: плитка + мини плеер-бар */
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.pvTile {
+  position: relative;
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+  padding: var(--sp-4);
+  width: min(100%, 300px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  transition: border-radius var(--dur-base) var(--ease-out);
+}
+
+.pvCover {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--r-xs);
+  transition: border-radius var(--dur-base) var(--ease-out);
+}
+
+.pvPlay {
+  position: absolute;
+  right: var(--sp-5);
+  top: var(--sp-5);
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  color: var(--text-on-accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--dur-base) var(--ease-out);
+}
+
+.pvPlay svg {
+  width: 20px;
+  height: 20px;
+}
+
+.pvName {
+  font-size: var(--fs-strong);
+  font-weight: var(--fw-semibold);
+  margin-top: var(--sp-2);
+}
+
+.pvSub {
+  font-size: var(--fs-caption);
+  color: var(--text-3);
+}
+
+.pvBar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  background: var(--glass-panel);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-5);
+  transition: border-radius var(--dur-base) var(--ease-out);
+}
+
+.pvBarCover {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-xs);
+  object-fit: cover;
+  flex: none;
+  transition: border-radius var(--dur-base) var(--ease-out);
+}
+
+.pvBarMeta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: none;
+}
+
+.pvBarTitle {
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+
+.pvBarArtist {
+  font-size: var(--fs-caption);
+  color: var(--text-3);
+}
+
+.pvTrack {
+  flex: 1;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+  overflow: hidden;
+}
+
+.pvFill {
+  display: block;
+  width: 42%;
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  transition: background-color var(--dur-base) var(--ease-out);
+}
+
+@media (max-width: 860px) {
+  .cols {
+    grid-template-columns: 1fr;
+  }
+}
