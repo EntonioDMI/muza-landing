@@ -160,54 +160,6 @@
   transition: border-radius var(--dur-base) var(--ease-out);
 }
 
-/* Хоткеи */
-
-.keysScene {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-3);
-  margin-bottom: var(--sp-4);
-}
-
-.keysScene kbd {
-  font-family: var(--font-ui);
-  font-size: var(--fs-caption);
-  font-weight: var(--fw-medium);
-  color: var(--text-2);
-  background: var(--surface-3);
-  border-radius: var(--r-xs);
-  padding: var(--sp-2) var(--sp-3);
-  transition:
-    transform var(--dur-fast) var(--ease-out),
-    background-color var(--dur-base) var(--ease-out),
-    color var(--dur-base) var(--ease-out);
-}
-
-.card:hover .keysScene kbd {
-  background: var(--surface-4);
-  color: var(--text-1);
-}
-
-.card:hover .keysScene kbd:nth-child(1) {
-  transform: translateY(-3px);
-  transition-delay: 0ms;
-}
-
-.card:hover .keysScene kbd:nth-child(2) {
-  transform: translateY(-3px);
-  transition-delay: 60ms;
-}
-
-.card:hover .keysScene kbd:nth-child(3) {
-  transform: translateY(-3px);
-  transition-delay: 120ms;
-}
-
-.card:hover .keysScene kbd:nth-child(4) {
-  transform: translateY(-3px);
-  transition-delay: 180ms;
-}
-
 /* ── Адаптив ── */
 
 @media (max-width: 960px) {

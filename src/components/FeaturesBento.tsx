@@ -67,12 +67,8 @@ export default function FeaturesBento() {
         {/* Хоткеи */}
         <Reveal delay={60} className={s.spanNarrow}>
           <article className={s.card}>
-            <div className={s.keysScene} aria-hidden="true">
-              <kbd>Space</kbd>
-              <kbd>Ctrl K</kbd>
-              <kbd>M</kbd>
-              <kbd>L</kbd>
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/art/hotkeys.webp" alt="" className={s.artScene} loading="lazy" />
             <h3 className={s.cardTitle}>Всё с клавиатуры</h3>
             <p className={s.cardText}>
               Пауза, поиск, лайк, громкость — глобальные хоткеи работают, даже
