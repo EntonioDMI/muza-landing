@@ -558,7 +558,8 @@
 .pbRight {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  /* как в приложении: кластер иконок ближе к транспорту, не прижат к краю */
+  justify-content: center;
   gap: 1.1em;
   color: var(--text-2);
 }
