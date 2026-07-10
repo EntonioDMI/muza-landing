@@ -3,6 +3,9 @@ import Hero from "@/components/Hero";
 import LyricsSection from "@/components/LyricsSection";
 import FeaturesBento from "@/components/FeaturesBento";
 import CustomizeSection from "@/components/CustomizeSection";
+import OpenSourceSection from "@/components/OpenSourceSection";
+import FinalCta from "@/components/FinalCta";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -15,7 +18,10 @@ export default function Home() {
         <LyricsSection />
         <FeaturesBento />
         <CustomizeSection />
+        <OpenSourceSection />
+        <FinalCta />
       </main>
+      <Footer />
     </>
   );
 }
