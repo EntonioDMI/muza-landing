@@ -7,6 +7,8 @@ const RELEASES = "https://github.com/EntonioDMI/muza-client/releases/latest";
 export default function FinalCta() {
   return (
     <section className={`container ${s.section}`}>
+      {/* Гигантский фирменный глиф — плоский силуэт слоем surface, без градиентов */}
+      <div className={s.glyphBg} aria-hidden="true" />
       <Reveal>
         <h2 className={s.title}>Слушай без ограничений</h2>
       </Reveal>

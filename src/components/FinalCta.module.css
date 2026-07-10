@@ -1,9 +1,28 @@
 .section {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding-block: calc(var(--sp-10) * 1.5);
+  padding-block: calc(var(--sp-10) * 2);
+}
+
+/* Силуэт молнии-глифа за CTA: маска из фирменного SVG, тон — слой surface */
+
+.glyphBg {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: min(72vw, 520px);
+  aspect-ratio: 1;
+  background: var(--surface-2);
+  mask: url("/logo/glyph.svg") center / contain no-repeat;
+  -webkit-mask: url("/logo/glyph.svg") center / contain no-repeat;
+  pointer-events: none;
+}
+
+.section > :not(.glyphBg) {
+  position: relative;
 }
 
 .title {
