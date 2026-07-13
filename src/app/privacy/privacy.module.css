@@ -1,0 +1,134 @@
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-5) 0;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  color: var(--text-1);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-strong);
+  letter-spacing: var(--ls-display);
+}
+
+.glyph {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-xs);
+}
+
+.back {
+  color: var(--text-2);
+  text-decoration: none;
+  font-size: var(--fs-body);
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--r-pill);
+  background: var(--surface-1);
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+
+.back:hover {
+  background: var(--surface-2);
+  color: var(--text-1);
+}
+
+.page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: var(--sp-8) 0 var(--sp-10);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--fs-greet);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-display);
+  line-height: var(--lh-tight);
+  margin: 0 0 var(--sp-3);
+}
+
+.updated {
+  color: var(--text-3);
+  font-size: var(--fs-caption);
+  margin: 0 0 var(--sp-7);
+}
+
+.lead {
+  background: var(--surface-1);
+  border-radius: var(--r-md);
+  padding: var(--sp-5) var(--sp-6);
+  margin: 0 0 var(--sp-8);
+}
+
+.lead ul {
+  margin: 0;
+  padding-left: 1.1em;
+  display: grid;
+  gap: var(--sp-2);
+  color: var(--text-2);
+  font-size: var(--fs-strong);
+  line-height: var(--lh-ui);
+}
+
+.lead strong {
+  color: var(--text-1);
+  font-weight: var(--fw-medium);
+}
+
+.section {
+  margin: 0 0 var(--sp-8);
+}
+
+.section h2 {
+  font-size: var(--fs-title);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-display);
+  margin: 0 0 var(--sp-4);
+}
+
+.section p,
+.section li {
+  color: var(--text-2);
+  font-size: var(--fs-strong);
+  line-height: 1.6;
+}
+
+.section p {
+  margin: 0 0 var(--sp-4);
+}
+
+.section ul {
+  margin: 0 0 var(--sp-4);
+  padding-left: 1.1em;
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.section li strong {
+  color: var(--text-1);
+  font-weight: var(--fw-medium);
+}
+
+.section a {
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+.section a:hover {
+  text-decoration: underline;
+}
+
+.note {
+  background: var(--surface-1);
+  border-radius: var(--r-sm);
+  padding: var(--sp-4) var(--sp-5);
+  color: var(--text-2);
+  font-size: var(--fs-body);
+  line-height: var(--lh-ui);
+}

@@ -19,6 +19,7 @@ export default function Footer() {
         <a href="https://github.com/EntonioDMI/muza-client/releases/latest">
           Скачать
         </a>
+        <a href="/privacy">Данные</a>
       </nav>
     </footer>
   );
