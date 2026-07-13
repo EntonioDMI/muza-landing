@@ -2,9 +2,14 @@
   "name": "muza-landing",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "next build --webpack",
+    "build": "node scripts/verify-release.mjs && next build --webpack",
+    "test": "node --test src/lib/release.test.ts scripts/verify-release.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

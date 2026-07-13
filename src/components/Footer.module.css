@@ -22,14 +22,43 @@
 
 .links {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--sp-5);
 }
 
 .links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--text-3);
+  white-space: nowrap;
   transition: color var(--dur-base) var(--ease-out);
+}
+
+.links .releaseLink {
+  color: var(--text-2);
 }
 
 .links a:hover {
   color: var(--text-1);
+}
+
+@media (max-width: 600px) {
+  .footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .links {
+    width: 100%;
+    gap: 0 var(--sp-5);
+  }
+}
+
+@media (max-width: 400px) {
+  .links {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }

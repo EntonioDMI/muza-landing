@@ -1,9 +1,8 @@
 import { Download } from "lucide-react";
+import type { LandingRelease } from "@/lib/release";
 import s from "./Header.module.css";
 
-const RELEASES = "https://github.com/EntonioDMI/muza-client/releases/latest";
-
-export default function Header() {
+export default function Header({ release }: { release: LandingRelease }) {
   return (
     <header className={s.header}>
       <div className={s.inner}>
@@ -23,10 +22,16 @@ export default function Header() {
             GitHub
           </a>
         </nav>
-        <a className={`btn btn-accent ${s.cta}`} href={RELEASES}>
-          <Download strokeWidth={1.75} className={s.ctaIcon} />
-          Скачать
-        </a>
+        {release.kind === "available" ? (
+          <a className={`btn btn-accent ${s.cta}`} href={release.downloadUrl}>
+            <Download strokeWidth={1.75} className={s.ctaIcon} aria-hidden="true" />
+            {`Скачать Muza ${release.tag}`}
+          </a>
+        ) : (
+          <span className={`${s.cta} ${s.status}`} role="status" aria-disabled="true">
+            Релиз готовится
+          </span>
+        )}
       </div>
     </header>
   );

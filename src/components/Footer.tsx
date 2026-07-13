@@ -1,6 +1,7 @@
+import type { LandingRelease } from "@/lib/release";
 import s from "./Footer.module.css";
 
-export default function Footer() {
+export default function Footer({ release }: { release: LandingRelease }) {
   return (
     <footer className={`container ${s.footer}`}>
       <span className={s.brand}>
@@ -16,9 +17,20 @@ export default function Footer() {
         >
           GitHub
         </a>
-        <a href="https://github.com/EntonioDMI/muza-client/releases/latest">
-          Скачать
-        </a>
+        {release.kind === "available" ? (
+          <a className={s.releaseLink} href={release.downloadUrl}>
+            {`Скачать Muza ${release.tag}`}
+          </a>
+        ) : (
+          <a
+            className={s.releaseLink}
+            href={release.repositoryUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Следить за релизом
+          </a>
+        )}
         <a href="/privacy">Данные</a>
       </nav>
     </footer>

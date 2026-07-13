@@ -1,12 +1,10 @@
 import { Download } from "lucide-react";
+import { abbreviateSha256, formatReleaseSize, type LandingRelease } from "@/lib/release";
 import AppMockup from "./AppMockup";
 import GitHubMark from "./GitHubMark";
 import s from "./Hero.module.css";
 
-const RELEASES = "https://github.com/EntonioDMI/muza-client/releases/latest";
-const REPO = "https://github.com/EntonioDMI/muza-client";
-
-export default function Hero() {
+export default function Hero({ release }: { release: LandingRelease }) {
   return (
     <section className={s.hero} id="top">
       <h1 className={s.title}>
@@ -17,21 +15,31 @@ export default function Hero() {
         песен, умная очередь и звук, который подстраивается под тебя.
       </p>
       <div className={s.actions}>
-        <a className="btn btn-accent" href={RELEASES}>
-          <Download strokeWidth={1.75} className={s.btnIcon} />
-          Скачать для Windows
-        </a>
+        {release.kind === "available" ? (
+          <a className="btn btn-accent" href={release.downloadUrl}>
+            <Download strokeWidth={1.75} className={s.btnIcon} aria-hidden="true" />
+            {`Скачать Muza ${release.tag}`}
+          </a>
+        ) : (
+          <span className={s.status} role="status" aria-disabled="true">
+            Первый релиз готовится
+          </span>
+        )}
         <a
           className="btn btn-surface"
-          href={REPO}
+          href={release.repositoryUrl}
           target="_blank"
           rel="noopener noreferrer"
         >
           <GitHubMark className={s.btnIcon} />
-          Исходники
+          {release.kind === "available" ? "Исходники" : "Следить за релизом на GitHub"}
         </a>
       </div>
-      <p className={s.note}>Windows 10/11 · без подписок и рекламы</p>
+      <p className={`${s.note} ${release.kind === "available" ? s.metadata : ""}`}>
+        {release.kind === "available"
+          ? `${formatReleaseSize(release.sizeBytes)} · SHA-256 ${abbreviateSha256(release.sha256)}`
+          : "Windows 10/11 · без подписок и рекламы"}
+      </p>
       <div className={s.mockupSlot}>
         <AppMockup />
       </div>
