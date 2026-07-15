@@ -38,6 +38,8 @@
   gap: var(--sp-3);
   margin-right: auto;
   min-height: 44px;
+  /* на узких экранах остаётся один глиф 22px — тап-цель держим ≥44px */
+  min-width: 44px;
 }
 
 .glyph {
@@ -87,23 +89,6 @@
 .ctaIcon {
   width: 18px;
   height: 18px;
-}
-
-.status {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--r-pill);
-  background: var(--surface-2);
-  color: var(--text-2);
-  font-weight: var(--fw-medium);
-  cursor: default;
-  pointer-events: none;
-  transform: none;
-}
-
-.status:active {
-  transform: none;
 }
 
 @media (max-width: 720px) {

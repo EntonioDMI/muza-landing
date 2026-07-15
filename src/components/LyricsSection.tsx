@@ -43,6 +43,9 @@ export default function LyricsSection() {
 
   return (
     <section className={s.section} id="lyrics">
+      {/* Заголовок флагманской секции — вне видимой сцены (караоке говорит само),
+          но в outline документа: скринридеры, сканирование, SEO */}
+      <h2 className="visually-hidden">Тексты песен — целиком и синхронно с треком</h2>
       {/* «Трек» задаёт длину скролла; sticky-экран липнет внутри него,
           поэтому аутро ниже никогда не наезжает на строки */}
       <div ref={trackRef} className={s.track}>

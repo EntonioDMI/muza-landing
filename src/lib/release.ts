@@ -20,6 +20,10 @@ export type LandingRelease =
     }>;
 
 const REPOSITORY_URL = "https://github.com/EntonioDMI/muza-client" as const;
+/** Страница релизов — для ссылок «следить за релизом» (там же виден Watch) */
+export const REPOSITORY_RELEASES_URL = `${REPOSITORY_URL}/releases` as const;
+/** Веб-версия плеера (статический экспорт apps/web на поддомене). */
+export const WEB_APP_URL = "https://app.muza.lol" as const;
 const TAG_PATTERN = /^v(?:0|[1-9]\d{0,4})\.(?:0|[1-9]\d{0,4})\.(?:0|[1-9]\d{0,4})$/;
 const SHA256_PATTERN = /^[0-9a-f]{64}$/;
 const SIZE_PATTERN = /^[1-9]\d*$/;

@@ -30,10 +30,6 @@
   --accent-text: #85b3fa;
   --accent-soft: rgba(59, 130, 246, 0.16);
 
-  /* Brand constants */
-  --brand-tile: #171614;
-  --brand-bolt: #327ad9;
-  --brand-flame: #f76967;
   --danger: #f76967;
 
   /* Type */
@@ -97,9 +93,11 @@
   --accent-hover: #f9807e;
   --accent-text: #fa9b99;
   --accent-soft: rgba(247, 105, 103, 0.16);
+  /* Белый на #f76967 — 2.9:1, не читается; на светлом акценте текст тёмный */
+  --text-on-accent: #121110;
 }
 
-[data-accent="bolt"] {
+[data-accent="ocean"] {
   --accent: #327ad9;
   --accent-hover: #4f8fe0;
   --accent-text: #7fb0ec;
@@ -180,6 +178,41 @@ h1,
 h2,
 h3 {
   text-wrap: balance;
+}
+
+/* Якорные переходы не ныряют под фиксированную шапку */
+[id] {
+  scroll-margin-top: 88px;
+}
+
+/* Скип-линк: невидим до клавиатурного фокуса */
+.skip-link {
+  position: fixed;
+  top: var(--sp-3);
+  left: var(--sp-3);
+  z-index: 20;
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--r-pill);
+  background: var(--bg-1);
+  color: var(--text-1);
+  font-weight: var(--fw-medium);
+  transform: translateY(calc(-100% - 24px));
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+/* Текст только для скринридеров */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 /* ── Общие утилиты лендинга ──────────────────────────────────────── */

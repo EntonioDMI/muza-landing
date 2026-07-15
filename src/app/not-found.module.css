@@ -1,0 +1,33 @@
+/* 404 в голосе Muza: тёмный графит, дисплейная цифра, один выход — домой */
+
+.page {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--sp-3);
+}
+
+.code {
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  font-size: clamp(3.5rem, 12vw, 6rem);
+  letter-spacing: var(--ls-display);
+  line-height: 1;
+  color: var(--text-3);
+}
+
+.title {
+  font-size: var(--fs-title);
+  font-weight: var(--fw-semibold);
+}
+
+.text {
+  color: var(--text-2);
+}
+
+.home {
+  margin-top: var(--sp-5);
+}

@@ -24,6 +24,9 @@
 }
 
 .back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--text-2);
   text-decoration: none;
   font-size: var(--fs-body);
@@ -38,8 +41,9 @@
   color: var(--text-1);
 }
 
+/* Мера строки: ~70ch при 17px — длиннее читается тяжело */
 .page {
-  max-width: 760px;
+  max-width: 640px;
   margin: 0 auto;
   padding: var(--sp-8) 0 var(--sp-10);
 }
@@ -54,7 +58,7 @@
 }
 
 .updated {
-  color: var(--text-3);
+  color: var(--text-2);
   font-size: var(--fs-caption);
   margin: 0 0 var(--sp-7);
 }
@@ -97,6 +101,7 @@
   color: var(--text-2);
   font-size: var(--fs-strong);
   line-height: 1.6;
+  text-wrap: pretty;
 }
 
 .section p {
@@ -131,4 +136,25 @@
   color: var(--text-2);
   font-size: var(--fs-body);
   line-height: var(--lh-ui);
+}
+
+/* Выход внизу длинной страницы — не заставляем скроллить обратно к шапке */
+.bottomNav {
+  margin-top: var(--sp-9);
+}
+
+.bottomNav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--sp-2) var(--sp-5);
+  border-radius: var(--r-pill);
+  background: var(--surface-1);
+  color: var(--text-2);
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+
+.bottomNav a:hover {
+  background: var(--surface-2);
+  color: var(--text-1);
 }

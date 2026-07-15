@@ -1,4 +1,4 @@
-import type { LandingRelease } from "@/lib/release";
+import { REPOSITORY_RELEASES_URL, WEB_APP_URL, type LandingRelease } from "@/lib/release";
 import s from "./Footer.module.css";
 
 export default function Footer({ release }: { release: LandingRelease }) {
@@ -10,6 +10,7 @@ export default function Footer({ release }: { release: LandingRelease }) {
         <span>Muza · {new Date().getFullYear()}</span>
       </span>
       <nav className={s.links} aria-label="Ссылки">
+        <a href={WEB_APP_URL}>Веб-версия</a>
         <a
           href="https://github.com/EntonioDMI/muza-client"
           target="_blank"
@@ -24,14 +25,14 @@ export default function Footer({ release }: { release: LandingRelease }) {
         ) : (
           <a
             className={s.releaseLink}
-            href={release.repositoryUrl}
+            href={REPOSITORY_RELEASES_URL}
             target="_blank"
             rel="noopener noreferrer"
           >
             Следить за релизом
           </a>
         )}
-        <a href="/privacy">Данные</a>
+        <a href="/privacy">Твои данные</a>
       </nav>
     </footer>
   );

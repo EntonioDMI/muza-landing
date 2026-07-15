@@ -1,5 +1,11 @@
-import { Download } from "lucide-react";
-import { abbreviateSha256, formatReleaseSize, type LandingRelease } from "@/lib/release";
+import { Download, Globe } from "lucide-react";
+import {
+  abbreviateSha256,
+  formatReleaseSize,
+  REPOSITORY_RELEASES_URL,
+  WEB_APP_URL,
+  type LandingRelease,
+} from "@/lib/release";
 import AppMockup from "./AppMockup";
 import GitHubMark from "./GitHubMark";
 import s from "./Hero.module.css";
@@ -11,8 +17,9 @@ export default function Hero({ release }: { release: LandingRelease }) {
         Музыка <span className={s.titleAccent}>без блюра</span>
       </h1>
       <p className={s.sub}>
-        Muza — бесплатный плеер для Windows. Полные синхронизированные тексты
-        песен, умная очередь и звук, который подстраивается под тебя.
+        Muza — бесплатный плеер для Windows. Тексты песен целиком — без
+        звёздочек и приглушённых слов, синхронно с треком. Умная очередь и
+        звук, который подстраивается под тебя.
       </p>
       <div className={s.actions}>
         {release.kind === "available" ? (
@@ -21,13 +28,15 @@ export default function Hero({ release }: { release: LandingRelease }) {
             {`Скачать Muza ${release.tag}`}
           </a>
         ) : (
-          <span className={s.status} role="status" aria-disabled="true">
-            Первый релиз готовится
-          </span>
+          <span className={s.status}>Первый релиз готовится</span>
         )}
+        <a className="btn btn-surface" href={WEB_APP_URL}>
+          <Globe strokeWidth={1.75} className={s.btnIcon} aria-hidden="true" />
+          Открыть в браузере
+        </a>
         <a
           className="btn btn-surface"
-          href={release.repositoryUrl}
+          href={release.kind === "available" ? release.repositoryUrl : REPOSITORY_RELEASES_URL}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -35,7 +44,7 @@ export default function Hero({ release }: { release: LandingRelease }) {
           {release.kind === "available" ? "Исходники" : "Следить за релизом на GitHub"}
         </a>
       </div>
-      <p className={`${s.note} ${release.kind === "available" ? s.metadata : ""}`}>
+      <p className={s.note}>
         {release.kind === "available"
           ? `${formatReleaseSize(release.sizeBytes)} · SHA-256 ${abbreviateSha256(release.sha256)}`
           : "Windows 10/11 · без подписок и рекламы"}

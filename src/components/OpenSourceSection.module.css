@@ -28,6 +28,7 @@
 .repoBtn {
   flex: none;
   font-size: var(--fs-body);
+  white-space: nowrap;
 }
 
 .mark {

@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: TITLE,
     description: DESCRIPTION,
     locale: "ru_RU",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Muza — музыка без блюра" }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Muza — музыка без цензуры" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -50,7 +50,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru">
-      <body>{children}</body>
+      <body>
+        <a href="#main" className="skip-link">
+          К содержимому
+        </a>
+        {children}
+      </body>
     </html>
   );
 }

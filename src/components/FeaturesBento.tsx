@@ -1,10 +1,23 @@
+import type { CSSProperties } from "react";
 import Reveal from "./Reveal";
 import s from "./FeaturesBento.module.css";
 
 /* Пять плашек с разными внутренними мини-сценами —
    у каждой своя микроанимация на hover. */
 
-const EQ_BARS = [42, 68, 55, 80, 62, 88, 50, 72, 58, 76];
+/* [высота покоя %, высота на hover %] — hover едет через scaleY, не height */
+const EQ_BARS: ReadonlyArray<readonly [number, number]> = [
+  [42, 70],
+  [68, 45],
+  [55, 85],
+  [80, 58],
+  [62, 92],
+  [88, 50],
+  [50, 78],
+  [72, 62],
+  [58, 88],
+  [76, 54],
+];
 
 export default function FeaturesBento() {
   return (
@@ -17,8 +30,16 @@ export default function FeaturesBento() {
         <Reveal className={s.spanWide}>
           <article className={s.card}>
             <div className={s.eqScene} aria-hidden="true">
-              {EQ_BARS.map((h, i) => (
-                <i key={i} style={{ height: `${h}%` }} />
+              {EQ_BARS.map(([rest, hover], i) => (
+                <i
+                  key={i}
+                  style={
+                    {
+                      height: `${rest}%`,
+                      "--eq-scale": (hover / rest).toFixed(3),
+                    } as CSSProperties
+                  }
+                />
               ))}
             </div>
             <h3 className={s.cardTitle}>Звук под тебя</h3>

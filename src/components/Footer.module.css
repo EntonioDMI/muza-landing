@@ -4,7 +4,7 @@
   justify-content: space-between;
   gap: var(--sp-5);
   padding-block: var(--sp-7);
-  color: var(--text-3);
+  color: var(--text-2);
   font-size: var(--fs-caption);
 }
 
@@ -30,13 +30,13 @@
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  color: var(--text-3);
+  color: var(--text-2);
   white-space: nowrap;
   transition: color var(--dur-base) var(--ease-out);
 }
 
 .links .releaseLink {
-  color: var(--text-2);
+  color: var(--text-1);
 }
 
 .links a:hover {

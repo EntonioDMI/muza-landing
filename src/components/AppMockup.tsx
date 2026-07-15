@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Heart,
   Home,
@@ -45,12 +45,23 @@ export default function AppMockup() {
   const reduced = usePrefersReducedMotion();
   // стартуем с середины «трека», чтобы сцена сразу выглядела живой
   const [elapsed, setElapsed] = useState(TRACK_SEC * 0.35);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(true);
+
+  // Демо-цикл живёт только пока мокап в кадре — не жжём CPU под фолдом
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver((entries) => setInView(entries[0].isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
-    if (reduced) return;
+    if (reduced || !inView) return;
     const id = setInterval(() => setElapsed((v) => v + TICK), TICK * 1000);
     return () => clearInterval(id);
-  }, [reduced]);
+  }, [reduced, inView]);
 
   const trackIdx = Math.floor(elapsed / TRACK_SEC) % DEMO_TRACKS.length;
   const prevIdx = (trackIdx - 1 + DEMO_TRACKS.length) % DEMO_TRACKS.length;
@@ -68,7 +79,7 @@ export default function AppMockup() {
   const paused = reduced;
 
   return (
-    <div className={s.mockup} aria-hidden="true">
+    <div ref={rootRef} className={s.mockup} aria-hidden="true">
       <div className={s.window}>
         <div className={s.zones}>
           {/* Сайдбар — бренд, навигация, плейлисты, настройки */}
@@ -235,7 +246,10 @@ export default function AppMockup() {
             <div className={s.pbProgressRow}>
               <span className={s.pbTime}>{formatTime(progress * track.durationSec)}</span>
               <span className={s.pbTrack}>
-                <span className={s.pbFill} style={{ width: `${progress * 100}%` }} />
+                <span
+                  className={s.pbFill}
+                  style={{ transform: `translateX(${(progress - 1) * 100}%)` }}
+                />
               </span>
               <span className={s.pbTime}>{formatTime(track.durationSec)}</span>
             </div>

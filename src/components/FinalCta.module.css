@@ -7,7 +7,7 @@
   padding-block: calc(var(--sp-10) * 2);
 }
 
-/* Силуэт молнии-глифа за CTA: маска из фирменного SVG, тон — слой surface */
+/* Силуэт глифа за CTA: маска из фирменного SVG, тон — слой surface */
 
 .glyphBg {
   position: absolute;
@@ -41,35 +41,11 @@
   gap: var(--sp-4);
 }
 
-.cta,
-.follow {
+.cta {
   min-height: 56px;
   white-space: nowrap;
-}
-
-.cta {
   padding: 0 var(--sp-8);
   font-size: var(--fs-title);
-}
-
-.follow {
-  padding-inline: var(--sp-6);
-}
-
-.status {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-pill);
-  background: var(--surface-2);
-  color: var(--text-2);
-  font-weight: var(--fw-semibold);
-  cursor: default;
-  pointer-events: none;
-}
-
-.status:active {
-  transform: none;
 }
 
 .icon {
@@ -80,10 +56,6 @@
 .note {
   margin-top: var(--sp-4);
   font-size: var(--fs-caption);
-  color: var(--text-3);
-}
-
-.metadata {
   color: var(--text-2);
 }
 
@@ -92,8 +64,7 @@
     width: 100%;
   }
 
-  .cta,
-  .follow {
+  .cta {
     width: 100%;
     padding-inline: var(--sp-5);
   }

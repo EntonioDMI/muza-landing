@@ -1,5 +1,11 @@
 import { Download } from "lucide-react";
-import { abbreviateSha256, formatReleaseSize, type LandingRelease } from "@/lib/release";
+import {
+  abbreviateSha256,
+  formatReleaseSize,
+  REPOSITORY_RELEASES_URL,
+  type LandingRelease,
+} from "@/lib/release";
+import GitHubMark from "./GitHubMark";
 import Reveal from "./Reveal";
 import s from "./FinalCta.module.css";
 
@@ -18,26 +24,22 @@ export default function FinalCta({ release }: { release: LandingRelease }) {
             {`Скачать Muza ${release.tag}`}
           </a>
         ) : (
-          <>
-            <span className={`${s.cta} ${s.status}`} role="status" aria-disabled="true">
-              Первый релиз готовится
-            </span>
-            <a
-              className={`btn btn-surface ${s.follow}`}
-              href={release.repositoryUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Следить за релизом на GitHub
-            </a>
-          </>
+          <a
+            className={`btn btn-accent ${s.cta}`}
+            href={REPOSITORY_RELEASES_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <GitHubMark className={s.icon} />
+            Следить за релизом на GitHub
+          </a>
         )}
       </Reveal>
       <Reveal delay={140}>
-        <p className={`${s.note} ${release.kind === "available" ? s.metadata : ""}`}>
+        <p className={s.note}>
           {release.kind === "available"
             ? `${formatReleaseSize(release.sizeBytes)} · SHA-256 ${abbreviateSha256(release.sha256)}`
-            : "Windows 10/11 · релиз появится на GitHub"}
+            : "Чтобы узнать о релизе первым — в репозитории нажми Watch → Custom → Releases"}
         </p>
       </Reveal>
     </section>

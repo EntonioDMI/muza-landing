@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <>
       <Header release={release} />
-      <main>
+      <main id="main">
         <div className="container">
           <Hero release={release} />
         </div>

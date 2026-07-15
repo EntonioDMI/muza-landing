@@ -22,7 +22,7 @@ export default function PrivacyPage() {
         </a>
       </header>
 
-      <main className={`container ${s.page}`}>
+      <main id="main" className={`container ${s.page}`}>
         <h1 className={s.title}>Как Muza использует твои данные</h1>
         <p className={s.updated}>Обновлено 13 июля 2026</p>
 
@@ -148,6 +148,10 @@ export default function PrivacyPage() {
             .
           </p>
         </section>
+
+        <nav className={s.bottomNav} aria-label="Возврат">
+          <a href="/">На главную</a>
+        </nav>
       </main>
     </>
   );

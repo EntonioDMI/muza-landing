@@ -2,8 +2,12 @@
   padding-block: var(--sp-8) 0;
 }
 
+/* aspect-ratio = реальные пропорции файла (1600×800): без него lazy-загрузка
+   сдвигала весь контент ниже на ~550px ровно в момент доскролла (CLS) */
 .img {
   width: 100%;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
   display: block;
   border-radius: var(--r-lg);
   transition: border-radius var(--dur-base) var(--ease-out);

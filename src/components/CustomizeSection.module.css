@@ -28,7 +28,7 @@
   margin-top: var(--sp-7);
   margin-bottom: var(--sp-3);
   font-size: var(--fs-caption);
-  color: var(--text-3);
+  color: var(--text-2);
 }
 
 .swatches {
@@ -43,7 +43,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--text-on-accent);
   transition: transform var(--dur-fast) var(--ease-out);
 }
 
@@ -82,16 +82,23 @@
   pointer-events: none;
 }
 
-/* Слайдер плотности стекла — плоский, пилюля + акцентный бегунок */
+/* Слайдер плотности стекла — плоский, пилюля + акцентный бегунок.
+   Видимый трек 8px, но хит-зона всего инпута — 44px (тач-норма проекта). */
 
 .range {
   appearance: none;
   -webkit-appearance: none;
   width: min(100%, 320px);
+  height: 44px;
+  background: transparent;
+  cursor: pointer;
+  outline-offset: var(--focus-offset);
+}
+
+.range::-webkit-slider-runnable-track {
   height: 8px;
   border-radius: var(--r-pill);
   background: var(--surface-3);
-  outline-offset: var(--focus-offset);
 }
 
 .range::-webkit-slider-thumb {
@@ -99,10 +106,17 @@
   -webkit-appearance: none;
   width: 22px;
   height: 22px;
+  margin-top: -7px;
   border-radius: var(--r-pill);
   background: var(--accent);
   border: none;
   transition: background-color var(--dur-base) var(--ease-out);
+}
+
+.range::-moz-range-track {
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
 }
 
 .range::-moz-range-thumb {
@@ -113,18 +127,11 @@
   border: none;
 }
 
-.moreChips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-3);
-}
-
-.moreChips span {
-  padding: var(--sp-2) var(--sp-4);
-  border-radius: var(--r-pill);
-  background: var(--surface-2);
+/* «А в приложении ещё» — просто перечисление, не кнопки: без пилюль,
+   чтобы не выглядело кликабельным рядом с настоящими чипами */
+.moreText {
   color: var(--text-2);
-  font-size: var(--fs-caption);
+  max-width: 48ch;
 }
 
 .chips {

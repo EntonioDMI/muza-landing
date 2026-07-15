@@ -24,7 +24,7 @@
   font-size: var(--fs-caption);
   letter-spacing: var(--ls-caps);
   text-transform: uppercase;
-  color: var(--text-3);
+  color: var(--text-2);
 }
 
 .lines {

@@ -1,5 +1,5 @@
 import { Download } from "lucide-react";
-import type { LandingRelease } from "@/lib/release";
+import { REPOSITORY_RELEASES_URL, WEB_APP_URL, type LandingRelease } from "@/lib/release";
 import s from "./Header.module.css";
 
 export default function Header({ release }: { release: LandingRelease }) {
@@ -14,6 +14,7 @@ export default function Header({ release }: { release: LandingRelease }) {
         <nav className={s.nav} aria-label="Разделы">
           <a href="#lyrics">Тексты</a>
           <a href="#features">Возможности</a>
+          <a href={WEB_APP_URL}>Веб-версия</a>
           <a
             href="https://github.com/EntonioDMI/muza-client"
             target="_blank"
@@ -28,9 +29,14 @@ export default function Header({ release }: { release: LandingRelease }) {
             {`Скачать Muza ${release.tag}`}
           </a>
         ) : (
-          <span className={`${s.cta} ${s.status}`} role="status" aria-disabled="true">
-            Релиз готовится
-          </span>
+          <a
+            className={`btn btn-surface ${s.cta}`}
+            href={REPOSITORY_RELEASES_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Следить на GitHub
+          </a>
         )}
       </div>
     </header>
