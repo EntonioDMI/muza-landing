@@ -1,0 +1,79 @@
+name: landing-drift
+
+# Лендинг — статический экспорт (next.config.ts: output: "export"): тег, размер и
+# sha256 запекаются в HTML на сборке, и подхватить новый релиз сам он не может.
+# 15.07.2026 это заметил владелец, а не CI: v0.1.3 стала Latest, а muza.lol
+# продолжал отдавать v0.1.2 — кнопка вела на прошлый установщик.
+#
+# Проверка НАМЕРЕННО не умеет деплоить: ходит только в публичный GitHub API и на
+# публичную страницу. Автодеплой потребовал бы SSH-ключ от muza_2 в секретах —
+# а там прод-база и .env, и цена такого удобства выше пользы. Расхождение находит
+# машина, чинит человек: pnpm build с release-env + своп /var/www/muza-landing.
+#
+# ⚠️ GitHub отключает schedule в репозитории без коммитов 60 дней, предупредив
+# письмом. Лендинг правится редко — если письмо пришло, воркфлоу надо включить
+# обратно, иначе сигнализация умрёт молча. workflow_dispatch работает всегда.
+on:
+  schedule:
+    - cron: "23 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+
+      # pnpm install не нужен: проверке хватает встроенного fetch, зависимостей у неё нет.
+      - name: Сверить muza.lol с последним релизом
+        id: check
+        continue-on-error: true
+        run: node scripts/check-drift.mjs 2>&1 | tee drift.txt
+
+      - name: Завести issue, если лендинг отстал
+        if: steps.check.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TITLE: Лендинг отстал от опубликованного релиза
+        run: |
+          # Упавшая проверка (сеть, лимит API) — НЕ расхождение. Красный прогон
+          # владелец увидит и так; issue про несуществующую проблему заводить нельзя.
+          # Префикс печатает check-drift.mjs — контракт между ним и этим шагом.
+          if ! grep -q "^Landing is stale:" drift.txt; then
+            echo "::error::Проверка не отработала — это не расхождение, issue не заводим"
+            exit 1
+          fi
+
+          # Дедуп по метке, а не поиском по заголовку: gh issue list --label бьёт в
+          # REST-список и видит свежий issue сразу, а search-индекс отстаёт на минуты
+          # и в следующий прогон завёл бы дубль.
+          gh label create landing-drift --color B60205 --description "muza.lol отстал от релиза" --force
+          EXISTING=$(gh issue list --state open --label landing-drift --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            echo "Issue #${EXISTING} уже открыт — не дублируем."
+            exit 1
+          fi
+
+          {
+            cat drift.txt
+            echo
+            echo 'Лендинг запекает версию, размер и sha256 в HTML на сборке — сам новый релиз он не подхватит.'
+            echo
+            echo '**Починка:** собрать `muza-landing` с `NEXT_PUBLIC_MUZA_RELEASE_{TAG,URL,SHA256,SIZE}` от текущего релиза (гейт `scripts/verify-release.mjs` сверит их с GitHub API) и заменить `/var/www/muza-landing` на muza_2, оставив бэкап.'
+            echo
+            echo "Прогон: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          } > body.md
+
+          gh issue create --label landing-drift --title "$TITLE" --body-file body.md
+          # Прогон остаётся красным, пока расхождение живо.
+          exit 1
