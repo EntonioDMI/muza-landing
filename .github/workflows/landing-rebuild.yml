@@ -1,0 +1,103 @@
+name: landing-rebuild
+
+# Автопересборка лендинга под свежий релиз muza-client — БЕЗ секретов прода.
+# Схема pull-деплоя (решение владельца 17.07.2026, docs/decisions.md рабочей папки):
+#   1. этот workflow по расписанию резолвит Latest-релиз (scripts/resolve-release.mjs),
+#      сверяет его и коммит main со штампом уже опубликованной сборки;
+#   2. при расхождении собирает статику (гейт verify-release.mjs внутри pnpm build)
+#      и force-push'ит содержимое out/ + DEPLOY-STAMP в ветку `deploy`;
+#   3. muza_2 сам забирает ветку по крону (/usr/local/bin/muza-landing-pull.sh,
+#      каждые 10 минут) и атомарно свопает /var/www/muza-landing.
+# SSH-ключей от muza_2 в секретах GitHub по-прежнему нет — сервер ХОДИТ САМ в
+# публичный репозиторий. Автодеплой push-схемой отвергнут владельцем 15.07 и
+# остаётся отвергнутым.
+#
+# Ветка `deploy` — артефакт, не код: один force-нутый коммит, история не хранится.
+# DEPLOY-STAMP = "<тег релиза> <sha main>" — меняется и от нового релиза, и от
+# правки самого лендинга; по нему же сервер решает, пора ли обновляться.
+#
+# landing-drift.yml остаётся независимой сигнализацией ПО ЖИВОЙ странице: если
+# эта труба сломается где угодно (тут, в ветке, в кроне сервера) — drift заведёт
+# issue максимум через сутки.
+#
+# ⚠️ GitHub отключает schedule в репозитории без коммитов 60 дней (то же
+# предупреждение, что у landing-drift.yml). Письмо от GitHub не игнорировать.
+on:
+  schedule:
+    - cron: "41 */2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: landing-rebuild
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+
+      - name: Резолв Latest-релиза в build-env
+        run: node scripts/resolve-release.mjs | tee -a "$GITHUB_ENV"
+
+      - name: Сверить со штампом опубликованной сборки
+        id: stamp
+        run: |
+          WANT="${NEXT_PUBLIC_MUZA_RELEASE_TAG} ${GITHUB_SHA}"
+          # raw.githubusercontent кэшируется ~5 минут; протухший кэш даст лишнюю
+          # пересборку — она идемпотентна и безвредна.
+          HAVE=$(curl -fsS --max-time 20 "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/deploy/DEPLOY-STAMP" || echo "none")
+          echo "want: $WANT"
+          echo "have: $HAVE"
+          if [ "$WANT" = "$HAVE" ]; then
+            echo "Опубликованная сборка уже соответствует релизу и исходникам — пересборка не нужна."
+            echo "fresh=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "fresh=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa
+        if: steps.stamp.outputs.fresh == 'false'
+        with:
+          version: 11
+
+      - name: Установить зависимости
+        if: steps.stamp.outputs.fresh == 'false'
+        run: pnpm install --frozen-lockfile
+
+      - name: Тесты
+        if: steps.stamp.outputs.fresh == 'false'
+        run: pnpm test
+
+      - name: Сборка (гейт verify-release внутри)
+        if: steps.stamp.outputs.fresh == 'false'
+        run: pnpm build
+
+      - name: Опубликовать out/ в ветку deploy
+        if: steps.stamp.outputs.fresh == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -eu
+          echo "${NEXT_PUBLIC_MUZA_RELEASE_TAG} ${GITHUB_SHA}" > out/DEPLOY-STAMP
+          # Гард перед публикацией: в собранном HTML действительно запечён резолвнутый тег.
+          grep -q "Muza ${NEXT_PUBLIC_MUZA_RELEASE_TAG}" out/index.html
+          test -f out/privacy.html
+          cd out
+          git init -q -b deploy
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "deploy: ${NEXT_PUBLIC_MUZA_RELEASE_TAG} @ ${GITHUB_SHA}"
+          # Токен только в этом шаге; checkout выше — persist-credentials: false.
+          git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" deploy
+          echo "Опубликовано: ${NEXT_PUBLIC_MUZA_RELEASE_TAG} @ ${GITHUB_SHA}"

@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "next dev --webpack",
     "build": "node scripts/verify-release.mjs && next build --webpack",
-    "test": "node --test src/lib/release.test.ts scripts/verify-release.test.mjs scripts/check-drift.test.mjs",
+    "test": "node --test src/lib/release.test.ts scripts/verify-release.test.mjs scripts/check-drift.test.mjs scripts/resolve-release.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
