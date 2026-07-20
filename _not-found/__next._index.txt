@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[9907,[],""]
+3:I[559,[],""]
+:HL["/_next/static/css/7a23d544512e97e0.css","style"]
+:HL["/_next/static/css/10dc131f0499d108.css","style"]
+0:{"rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/7a23d544512e97e0.css","precedence":"next"}]],["$","html",null,{"lang":"ru","children":["$","body",null,{"children":[["$","a",null,{"href":"#main","className":"skip-link","children":"К содержимому"}],["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}],"notFound":[["$","main",null,{"className":"container not-found_page__VFIr4","children":[["$","p",null,{"className":"not-found_code__SJkuV","aria-hidden":"true","children":"404"}],["$","h1",null,{"className":"not-found_title__bOfUG","children":"Такой страницы нет"}],["$","p",null,{"className":"not-found_text__daKc7","children":"Ссылка устарела или в адресе опечатка."}],["$","a",null,{"href":"/","className":"btn btn-surface not-found_home__mSMsN","children":"На главную"}]]}],[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/10dc131f0499d108.css","precedence":"next"}]]]}]]}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"u9arDsIYhhg3YlJmY9mef"}

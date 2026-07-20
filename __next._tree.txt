@@ -1,0 +1,6 @@
+:HL["/_next/static/css/7a23d544512e97e0.css","style"]
+:HL["/_next/static/css/6e516901a46d372a.css","style"]
+:HL["/_next/static/css/10dc131f0499d108.css","style"]
+:HL["/logo/glyph.svg","image"]
+:HL["/covers/cover-1.png","image"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"u9arDsIYhhg3YlJmY9mef"}
