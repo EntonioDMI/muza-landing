@@ -11,7 +11,36 @@
   pointer-events: none;
 }
 
+/* Вход мокапа: окно всплывает своим ходом (не общим 10px-фейдом абзацев),
+   зоны догоняют стаггером — сайдбар → центр → «Сейчас играет» → плеер-бар.
+   fill: backwards — после конца ничего не остаётся применённым (гигиена
+   backdrop-root, как у headerIn). */
+@keyframes mockIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.975);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes zoneIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .window {
+  animation: mockIn 640ms var(--ease-out) 320ms backwards;
   background: var(--bg-1);
   border-radius: calc(var(--r-xl) * 0.9);
   padding: 0.9em;
@@ -37,6 +66,7 @@
   border-radius: calc(var(--r-lg) * 0.85);
   padding: 1.1em;
   transition: border-radius var(--dur-base) var(--ease-out);
+  animation: zoneIn 480ms var(--ease-out) 640ms backwards;
 }
 
 /* Сайдбар */
@@ -45,6 +75,11 @@
   display: flex;
   flex-direction: column;
   gap: 0.35em;
+  animation: zoneIn 480ms var(--ease-out) 480ms backwards;
+}
+
+.main {
+  animation: zoneIn 480ms var(--ease-out) 560ms backwards;
 }
 
 .brand {
@@ -124,6 +159,24 @@
   border-radius: calc(var(--r-xs) * 0.8);
   object-fit: cover;
   flex: none;
+}
+
+/* «Любимое»: сердце на фирменном градиенте логотипа (glyph.svg: #F76967 → #3B82F6) —
+   как FavoritesRow приложения */
+.plFav {
+  width: 3em;
+  height: 3em;
+  border-radius: calc(var(--r-xs) * 0.8);
+  flex: none;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #f76967, #3b82f6);
+  color: #fff;
+}
+
+.plFav :global(svg) {
+  width: 1.4em;
+  height: 1.4em;
 }
 
 .plMeta {
@@ -215,7 +268,16 @@
   display: flex;
   flex-direction: column;
   gap: 0.25em;
-  transition: border-radius var(--dur-base) var(--ease-out);
+  transition:
+    border-radius var(--dur-base) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+/* лёгкая жизнь мокапа: плитки отвечают на курсор, как в приложении */
+.tile:hover {
+  background: var(--surface-3);
+  transform: translateY(-3px);
 }
 
 .tileCoverBox {
@@ -249,6 +311,42 @@
 .tileBadge svg {
   width: 1.1em;
   height: 1.1em;
+}
+
+/* Полоски «играет» в бейдже активной плитки (при reduced-motion бейдж
+   показывает статичную паузу — ветка в TSX) */
+.tileEq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0.18em;
+  height: 1.05em;
+}
+
+.tileEq i {
+  width: 0.22em;
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: currentColor;
+  transform-origin: bottom;
+  animation: tileEqB 0.9s ease-in-out infinite alternate;
+}
+
+.tileEq i:nth-child(1) {
+  animation-delay: -0.2s;
+}
+
+.tileEq i:nth-child(3) {
+  animation-delay: -0.55s;
+}
+
+@keyframes tileEqB {
+  from {
+    transform: scaleY(0.35);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
 }
 
 @keyframes badgeIn {
@@ -432,6 +530,7 @@
   align-items: center;
   gap: 1.2em;
   background: var(--surface-2);
+  animation: zoneIn 480ms var(--ease-out) 720ms backwards;
   border-radius: calc(var(--r-lg) * 0.85);
   padding: 1em 1.4em;
   transition: border-radius var(--dur-base) var(--ease-out);
@@ -639,5 +738,21 @@
 
   .main {
     display: none;
+  }
+}
+
+/* Каждой анимации — reduced-motion-альтернатива (норма проекта):
+   вход мгновенный, полоски «играет» не рисуются вовсе (ветка paused в TSX). */
+@media (prefers-reduced-motion: reduce) {
+  .window,
+  .sidebar,
+  .main,
+  .nowPlaying,
+  .playerBar {
+    animation: none;
+  }
+
+  .tile:hover {
+    transform: none;
   }
 }

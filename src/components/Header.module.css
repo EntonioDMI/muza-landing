@@ -3,7 +3,11 @@
   inset: 0 0 auto 0;
   z-index: 10;
   padding: var(--sp-3) clamp(12px, 2.5vw, 24px) 0;
-  animation: headerIn var(--dur-slow) var(--ease-out) both;
+  /* ⚠️ Анимации здесь быть НЕ может: opacity/transform-анимация на ПРЕДКЕ
+     стеклянного .inner делает предка backdrop-root'ом (Chromium), и
+     backdrop-filter потомка сэмплирует пустоту — хедер выглядел «просто
+     полупрозрачным» без блюра (скриншот владельца 2026-07-21). Вход
+     анимирует сам .inner ниже. */
 }
 
 @keyframes headerIn {
@@ -25,11 +29,32 @@
   align-items: center;
   gap: var(--sp-6);
   padding: var(--sp-2) var(--sp-3) var(--sp-2) var(--sp-5);
-  background: var(--glass-panel);
+  /* Наверху — прозрачная (над героем стеклу нечего размывать); стекло
+     включается скролл-состоянием ниже */
+  background: transparent;
+  border-radius: var(--r-lg);
+  /* fill: backwards — после конца анимации НИЧЕГО не остаётся применённым
+     (filled-анимация держала бы элемент композитным вечно) */
+  animation: headerIn var(--dur-slow) var(--ease-out) backwards;
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    backdrop-filter var(--dur-base) var(--ease-out);
+}
+
+/* Канон матового стекла ДС — как в приложении: блюр из той же переменной,
+   которой управляет слайдер кастомизации. Плотность — 70% канона: на почти
+   чёрной странице полный 62%-графит глушил блюр в невидимость (критика
+   2026-07-21, пруф пикселями). Без рамок (ДС: «слои вместо рамок»). */
+.inner[data-scrolled] {
+  background: color-mix(in srgb, var(--glass-panel) 70%, transparent);
   backdrop-filter: blur(var(--blur-glass));
   -webkit-backdrop-filter: blur(var(--blur-glass));
-  border-radius: var(--r-lg);
-  transition: border-radius var(--dur-base) var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inner {
+    animation: none;
+  }
 }
 
 .brand {
@@ -91,13 +116,72 @@
   height: 18px;
 }
 
+/* Кнопка меню и шторка — только на узких экранах */
+.menuBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: var(--r-pill);
+  color: var(--text-2);
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out);
+}
+
+.menuBtn:hover {
+  background: var(--surface-2);
+  color: var(--text-1);
+}
+
+.menuBtn svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* Шторка навигации: то же стекло, что и пилюля. Сиблинг .inner в потоке
+   fixed-хедера (хедер растёт вниз, страницу не двигает) */
+.sheet {
+  max-width: 1160px;
+  margin: var(--sp-2) auto 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-2);
+  border-radius: var(--r-lg);
+  background: var(--glass-deep);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+}
+
+.sheet a {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 var(--sp-4);
+  border-radius: var(--r-md);
+  color: var(--text-1);
+  font-weight: var(--fw-medium);
+  transition: background-color var(--dur-base) var(--ease-out);
+}
+
+.sheet a:hover {
+  background: var(--surface-2);
+}
+
 @media (max-width: 720px) {
   .inner {
+    position: relative;
     gap: var(--sp-3);
   }
 
   .nav {
     display: none;
+  }
+
+  .menuBtn {
+    display: inline-flex;
   }
 }
 

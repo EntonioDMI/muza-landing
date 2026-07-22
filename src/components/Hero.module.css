@@ -8,12 +8,14 @@
 
 /* Каскад входа: заголовок → подзаголовок → кнопки → сноска → мокап */
 
+/* fill: backwards — гигиена backdrop-root (см. Header.module.css): filled-
+   анимация держала бы элементы композитными вечно. Мокап входит сам
+   (AppMockup: окно + стаггер зон), слот больше не фейдится. */
 .title,
 .sub,
 .actions,
-.note,
-.mockupSlot {
-  animation: heroIn var(--dur-slow) var(--ease-out) both;
+.note {
+  animation: heroIn var(--dur-slow) var(--ease-out) backwards;
 }
 
 .sub {
@@ -26,10 +28,6 @@
 
 .note {
   animation-delay: 240ms;
-}
-
-.mockupSlot {
-  animation-delay: 320ms;
 }
 
 @keyframes heroIn {
@@ -95,6 +93,32 @@
   border-radius: var(--r-pill);
   background: var(--accent);
   transition: background-color var(--dur-base) var(--ease-out);
+  /* обещание живое — и точка живая (только opacity, в рамках ДС) */
+  animation: statusPulse 2.4s var(--ease-out) infinite;
+}
+
+@keyframes statusPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title,
+  .sub,
+  .actions,
+  .note {
+    animation: none;
+  }
+
+  .status::before {
+    animation: none;
+  }
 }
 
 .btnIcon {

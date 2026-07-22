@@ -3,9 +3,8 @@
 }
 
 .track {
-  /* высота задаёт «длину трека»: чем больше, тем медленнее листаются строки.
-     Именно этот блок держит место в потоке — аутро идёт строго после него */
-  height: 280vh;
+  /* высота задаёт «длину трека»: чем больше, тем медленнее листаются строки */
+  height: 200vh;
 }
 
 .sticky {
@@ -15,8 +14,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: var(--sp-8);
+  padding: calc(var(--sp-8) + 56px) var(--sp-5) var(--sp-8);
+  /* дальние строки уезжают за сцену — клипуем, затухание довершает дистанция */
+  overflow: hidden;
+}
+
+.nowPlaying {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-4);
 }
 
 /* Единственный микро-ярлык на лендинге — цитата из UI приложения */
@@ -27,19 +34,69 @@
   color: var(--text-2);
 }
 
-.lines {
+.trackRow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.cover {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-sm);
+  object-fit: cover;
+}
+
+.trackMeta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+}
+
+.trackTitle {
+  font-weight: var(--fw-semibold);
+  color: var(--text-1);
+}
+
+.trackArtist {
+  color: var(--text-2);
+}
+
+.trackArtist::before {
+  content: "· ";
+}
+
+/* Сцена: активная строка катится к центру, как в караоке-режиме приложения.
+   overflow: hidden ОБЯЗАТЕЛЕН — ролл абсолютный и без клипа наезжал бы на
+   «Сейчас играет» сверху и прогресс снизу (скриншот 2026-07-21) */
+.stage {
+  position: relative;
+  flex: 1;
+  align-self: stretch;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.roll {
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(14px, 2.6vh, 26px);
+  gap: clamp(12px, 2.2vh, 22px);
   text-align: center;
+  transition: transform var(--dur-slow) var(--ease-out);
 }
 
 .line {
-  font-size: clamp(1.55rem, 4.6vw, 3.4rem);
+  max-width: 24ch;
+  /* караоке-типографика — брендовый момент Unbounded (как в приложении) */
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 3.2vw, 2.35rem);
   line-height: var(--lh-lyrics);
-  font-weight: var(--fw-bold);
-  letter-spacing: -0.01em;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-display);
   transform-origin: center;
   transition:
     color var(--dur-slow) var(--ease-out),
@@ -54,19 +111,66 @@
 
 .line[data-dist="1"] {
   color: var(--text-2);
-  transform: scale(0.9);
+  transform: scale(0.88);
 }
 
 .line[data-dist="2"] {
   color: var(--text-3);
   transform: scale(0.8);
-  opacity: 0.75;
+  opacity: 0.7;
+}
+
+.line[data-dist="3"] {
+  color: var(--text-3);
+  transform: scale(0.76);
+  opacity: 0.35;
+}
+
+/* Волосок прогресса — как строка времени в плеер-баре приложения */
+.progress {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  width: min(560px, 78vw);
+}
+
+.time {
+  font-size: var(--fs-caption);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-3);
+  min-width: 4ch;
+}
+
+.time:last-child {
+  text-align: right;
+}
+
+.bar {
+  flex: 1;
+  height: 3px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left;
+  /* transform вместо width — без рефлоу, как pbFill мокапа */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roll,
+  .line {
+    transition: none;
+  }
 }
 
 .outro {
   display: flex;
   justify-content: center;
-  padding: 0 var(--sp-5) var(--sp-10);
+  padding: var(--sp-8) var(--sp-5) var(--sp-10);
 }
 
 .outroText {
@@ -74,4 +178,29 @@
   text-align: center;
   font-size: var(--fs-strong);
   color: var(--text-2);
+}
+
+@media (max-width: 520px) {
+  .cover {
+    width: 36px;
+    height: 36px;
+  }
+
+  .trackMeta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .trackArtist {
+    font-size: var(--fs-caption);
+  }
+
+  .trackArtist::before {
+    content: "";
+  }
+
+  .line {
+    max-width: 20ch;
+  }
 }

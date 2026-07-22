@@ -1,246 +1,116 @@
 .section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-7);
   padding-block: var(--sp-10);
 }
 
-.cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(28px, 5vw, 64px);
-  align-items: center;
-  background: var(--surface-1);
-  border-radius: var(--r-xl);
-  padding: clamp(24px, 4.5vw, 56px);
-  transition: border-radius var(--dur-base) var(--ease-out);
+.head {
+  max-width: 62ch;
 }
 
 .title {
+  /* H2 секций — единый дисплей-голос (унификация 2026-07-21) */
+  font-family: var(--font-display);
   font-size: clamp(1.6rem, 3.2vw, 2.25rem);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-display);
+  margin-bottom: var(--sp-4);
+  text-wrap: balance;
 }
 
 .text {
-  margin-top: var(--sp-4);
   color: var(--text-2);
-  max-width: 48ch;
+  font-size: var(--fs-strong);
+  text-wrap: pretty;
 }
 
-.groupLabel {
-  margin-top: var(--sp-7);
-  margin-bottom: var(--sp-3);
-  font-size: var(--fs-caption);
-  color: var(--text-2);
-}
-
-.swatches {
-  display: flex;
-  gap: var(--sp-4);
-}
-
-.swatch {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--r-pill);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-on-accent);
-  transition: transform var(--dur-fast) var(--ease-out);
-}
-
-.swatch:hover {
-  transform: scale(1.08);
-}
-
-.swatch:active {
-  transform: scale(var(--press-scale));
-}
-
-.swatchCheck {
-  width: 20px;
-  height: 20px;
-}
-
-.swatchCustom {
-  background: var(--surface-3);
-  color: var(--text-2);
-}
-
-.swatchCustom:hover {
-  color: var(--text-1);
-}
-
-.swatchPipette {
-  width: 18px;
-  height: 18px;
-}
-
-.colorInput {
-  position: absolute;
-  width: 0;
-  height: 0;
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Слайдер плотности стекла — плоский, пилюля + акцентный бегунок.
-   Видимый трек 8px, но хит-зона всего инпута — 44px (тач-норма проекта). */
-
-.range {
-  appearance: none;
-  -webkit-appearance: none;
-  width: min(100%, 320px);
-  height: 44px;
-  background: transparent;
-  cursor: pointer;
-  outline-offset: var(--focus-offset);
-}
-
-.range::-webkit-slider-runnable-track {
-  height: 8px;
-  border-radius: var(--r-pill);
-  background: var(--surface-3);
-}
-
-.range::-webkit-slider-thumb {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 22px;
-  height: 22px;
-  margin-top: -7px;
-  border-radius: var(--r-pill);
-  background: var(--accent);
-  border: none;
-  transition: background-color var(--dur-base) var(--ease-out);
-}
-
-.range::-moz-range-track {
-  height: 8px;
-  border-radius: var(--r-pill);
-  background: var(--surface-3);
-}
-
-.range::-moz-range-thumb {
-  width: 22px;
-  height: 22px;
-  border-radius: var(--r-pill);
-  background: var(--accent);
-  border: none;
-}
-
-/* «А в приложении ещё» — просто перечисление, не кнопки: без пилюль,
-   чтобы не выглядело кликабельным рядом с настоящими чипами */
-.moreText {
-  color: var(--text-2);
-  max-width: 48ch;
-}
-
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-3);
-}
-
-.chip {
-  padding: var(--sp-3) var(--sp-5);
-  border-radius: var(--r-pill);
-  background: var(--surface-2);
-  color: var(--text-2);
-  font-weight: var(--fw-medium);
-  transition:
-    background-color var(--dur-base) var(--ease-out),
-    color var(--dur-base) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
-}
-
-.chip:hover {
-  background: var(--surface-3);
-  color: var(--text-1);
-}
-
-.chip:active {
-  transform: scale(var(--press-scale));
-}
-
-.chipOn {
-  background: var(--surface-4);
-  color: var(--accent-text);
-}
-
-/* Превью: плитка + мини плеер-бар */
+/* ── Превью-сцена: главный объект секции ─────────────────────────── */
 
 .preview {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-5);
+  width: min(680px, 100%);
+  margin-inline: auto;
 }
 
-.pvTile {
+.pvScene {
   position: relative;
-  background: var(--surface-2);
-  border-radius: var(--r-md);
-  padding: var(--sp-4);
-  width: min(100%, 300px);
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  /* зона как в приложении: слой, не рамка */
+  background: var(--surface-1);
+  transition: border-radius var(--dur-base) var(--ease-out);
+}
+
+/* Сценография как в приложении: обложка играющего трека РАЗМЫТА за
+   интерфейсом (bgType=cover, blur-scenery), а не резкий арт — иначе сцена
+   читалась «гигантскими столбами», и стеклянный бар терялся (владелец,
+   утро 21.07). scale прячет светящиеся края блюра. */
+.pvBackdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(28px);
+  transform: scale(1.18);
+  opacity: 0.6;
+}
+
+/* Плитка плейлиста поверх сцены — показывает скругления и шрифт */
+.pvTile {
+  position: absolute;
+  top: clamp(12px, 4%, 24px);
+  left: clamp(12px, 4%, 24px);
   display: flex;
   flex-direction: column;
-  gap: var(--sp-2);
+  gap: 2px;
+  padding: var(--sp-3);
+  border-radius: var(--r-md);
+  background: var(--glass-deep);
+  max-width: 168px;
   transition: border-radius var(--dur-base) var(--ease-out);
 }
 
 .pvCover {
-  width: 100%;
-  aspect-ratio: 1;
+  width: 112px;
+  height: 112px;
+  border-radius: var(--r-sm);
   object-fit: cover;
-  border-radius: var(--r-xs);
+  margin-bottom: var(--sp-2);
   transition: border-radius var(--dur-base) var(--ease-out);
 }
 
-.pvPlay {
-  position: absolute;
-  right: var(--sp-5);
-  top: var(--sp-5);
-  width: 48px;
-  height: 48px;
-  border-radius: var(--r-pill);
-  background: var(--accent);
-  color: var(--text-on-accent);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color var(--dur-base) var(--ease-out);
-}
-
-.pvPlay svg {
-  width: 20px;
-  height: 20px;
-}
-
 .pvName {
-  font-size: var(--fs-strong);
   font-weight: var(--fw-semibold);
-  margin-top: var(--sp-2);
+  font-size: var(--fs-body);
+  color: var(--text-1);
 }
 
 .pvSub {
   font-size: var(--fs-caption);
-  color: var(--text-3);
+  color: var(--text-2);
 }
 
-.pvBar {
+/* Стеклянный плеер-бар ПОВЕРХ обложки: плотность стекла видна глазами */
+.pvGlass {
+  position: absolute;
+  inset: auto clamp(12px, 4%, 24px) clamp(12px, 4%, 24px);
   display: flex;
   align-items: center;
-  gap: var(--sp-4);
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-lg);
   background: var(--glass-panel);
   backdrop-filter: blur(var(--blur-glass));
   -webkit-backdrop-filter: blur(var(--blur-glass));
-  border-radius: var(--r-lg);
-  padding: var(--sp-4) var(--sp-5);
   transition: border-radius var(--dur-base) var(--ease-out);
 }
 
 .pvBarCover {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--r-xs);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-sm);
   object-fit: cover;
   flex: none;
   transition: border-radius var(--dur-base) var(--ease-out);
@@ -254,18 +124,21 @@
 }
 
 .pvBarTitle {
-  font-weight: var(--fw-medium);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  color: var(--text-1);
   white-space: nowrap;
 }
 
 .pvBarArtist {
   font-size: var(--fs-caption);
-  color: var(--text-3);
+  color: var(--text-2);
 }
 
 .pvTrack {
   flex: 1;
-  height: 6px;
+  min-width: 40px;
+  height: 3px;
   border-radius: var(--r-pill);
   background: var(--surface-3);
   overflow: hidden;
@@ -273,15 +146,247 @@
 
 .pvFill {
   display: block;
-  width: 42%;
+  width: 100%;
   height: 100%;
-  border-radius: var(--r-pill);
   background: var(--accent);
-  transition: background-color var(--dur-base) var(--ease-out);
+  transform: scaleX(0.38);
+  transform-origin: left;
 }
 
-@media (max-width: 860px) {
-  .cols {
-    grid-template-columns: 1fr;
+.pvPlay {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  /* контраст-гард: тёмный глиф на светлом своём акценте */
+  color: var(--text-on-accent, #fff);
+}
+
+.pvPlay svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ── Панель контролов: второй план ────────────────────────────────── */
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--sp-5) var(--sp-7);
+  width: min(680px, 100%);
+  margin-inline: auto;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.groupGrow {
+  flex: 1;
+  min-width: 180px;
+}
+
+.groupLabel {
+  font-size: var(--fs-caption);
+  color: var(--text-3);
+}
+
+.swatches {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.swatch {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-pill);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.swatch:hover {
+  transform: scale(1.08);
+}
+
+.swatch[aria-checked="true"] {
+  outline: 2px solid var(--text-1);
+  outline-offset: 3px;
+}
+
+.swatchCustom {
+  background: var(--surface-3);
+  color: var(--text-2);
+}
+
+.swatchCheck {
+  width: 18px;
+  height: 18px;
+}
+
+.swatchPipette {
+  width: 18px;
+  height: 18px;
+}
+
+/* Пипетка: input живёт невидимкой — активируется кнопкой-свотчем */
+.colorInput {
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  border: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.chip {
+  min-height: 44px;
+  padding: 0 var(--sp-4);
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.chip:hover {
+  background: var(--surface-3);
+  color: var(--text-1);
+}
+
+.chipOn {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.range {
+  appearance: none;
+  width: 100%;
+  height: 44px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.range::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+}
+
+.range::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  margin-top: -7px;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+}
+
+.range::-moz-range-track {
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+}
+
+.range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+}
+
+.reset {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: 44px;
+  padding: 0 var(--sp-4);
+  border-radius: var(--r-pill);
+  color: var(--text-2);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
+}
+
+.reset:hover:not(:disabled) {
+  background: var(--surface-2);
+  color: var(--text-1);
+}
+
+.reset:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.resetIcon {
+  width: 16px;
+  height: 16px;
+}
+
+/* «А в приложении ещё» — текст, не пилюли: ничто не притворяется кликабельным */
+.more {
+  width: min(680px, 100%);
+  margin-inline: auto;
+  color: var(--text-3);
+  font-size: var(--fs-body);
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swatch {
+    transition: none;
+  }
+
+  .swatch:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .pvTile {
+    max-width: 132px;
+  }
+
+  .pvCover {
+    width: 84px;
+    height: 84px;
+  }
+
+  .pvBarMeta {
+    flex: 1;
+  }
+
+  .pvTrack {
+    display: none;
+  }
+
+  .pvScene {
+    aspect-ratio: 4 / 3;
   }
 }

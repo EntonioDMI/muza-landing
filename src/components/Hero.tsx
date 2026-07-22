@@ -30,7 +30,12 @@ export default function Hero({ release }: { release: LandingRelease }) {
         ) : (
           <span className={s.status}>Первый релиз готовится</span>
         )}
-        <a className="btn btn-surface" href={WEB_APP_URL}>
+        {/* Пока релиза нет, у страницы должно остаться главное действие:
+            веб-версия — единственное настоящее продуктовое действие */}
+        <a
+          className={release.kind === "available" ? "btn btn-surface" : "btn btn-accent"}
+          href={WEB_APP_URL}
+        >
           <Globe strokeWidth={1.75} className={s.btnIcon} aria-hidden="true" />
           Открыть в браузере
         </a>

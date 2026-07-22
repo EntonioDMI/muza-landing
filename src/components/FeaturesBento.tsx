@@ -37,6 +37,9 @@ export default function FeaturesBento() {
                     {
                       height: `${rest}%`,
                       "--eq-scale": (hover / rest).toFixed(3),
+                      /* стаггер тач-цикла: hover-сцены на таче не существуют,
+                         полосы дышат сами (см. @media (hover: none)) */
+                      "--eq-i": i,
                     } as CSSProperties
                   }
                 />

@@ -96,12 +96,18 @@ export const EXTRA_TILE = {
   cover: "/covers/cover-4.png",
 };
 
-/** Плейлисты сайдбара и полки «Собрано для тебя» — как в приложении */
+/** Плейлисты сайдбара и полки — как в ТЕКУЩЕМ приложении (2026-07-20):
+ *  иконки из фирменного набора pi-NN (38 штук, ассеты скопированы из
+ *  muza-client), а не обложки; «Любимое» — не плейлист, а особая первая
+ *  строка с сердцем на градиенте логотипа (рисуется в AppMockup). */
 export const PLAYLISTS: DemoCollection[] = [
-  { id: "p1", name: "Ночной вайб", meta: "42 трека", cover: "/covers/cover-5.png" },
-  { id: "p2", name: "Для дороги", meta: "28 треков", cover: "/covers/cover-6.png" },
-  { id: "p3", name: "Любимое", meta: "117 треков", cover: "/covers/cover-7.png" },
+  { id: "p1", name: "Ночной вайб", meta: "42 трека", cover: "/playlist-icons/pi-03.png" },
+  { id: "p2", name: "Для дороги", meta: "28 треков", cover: "/playlist-icons/pi-06.png" },
+  { id: "p3", name: "Без блюра", meta: "63 трека", cover: "/playlist-icons/pi-11.png" },
 ];
+
+/** Особая строка «Любимое» над плейлистами (Spotify-паттерн приложения). */
+export const FAVORITES_ROW = { name: "Любимое", meta: "117 треков" };
 
 export function formatTime(sec: number): string {
   const m = Math.floor(sec / 60);

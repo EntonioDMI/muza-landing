@@ -4,3 +4,6 @@ out/
 next-env.d.ts
 *.tsbuildinfo
 .DS_Store
+
+# Рабочая папка скилла impeccable (снапшоты критики) — не для git
+.impeccable/

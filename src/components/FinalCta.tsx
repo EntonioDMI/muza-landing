@@ -1,8 +1,9 @@
-import { Download } from "lucide-react";
+import { Download, Globe } from "lucide-react";
 import {
   abbreviateSha256,
   formatReleaseSize,
   REPOSITORY_RELEASES_URL,
+  WEB_APP_URL,
   type LandingRelease,
 } from "@/lib/release";
 import GitHubMark from "./GitHubMark";
@@ -24,15 +25,22 @@ export default function FinalCta({ release }: { release: LandingRelease }) {
             {`Скачать Muza ${release.tag}`}
           </a>
         ) : (
-          <a
-            className={`btn btn-accent ${s.cta}`}
-            href={REPOSITORY_RELEASES_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <GitHubMark className={s.icon} />
-            Следить за релизом на GitHub
-          </a>
+          <>
+            {/* Пока релиза нет, акцент — у настоящего продуктового действия */}
+            <a className={`btn btn-accent ${s.cta}`} href={WEB_APP_URL}>
+              <Globe strokeWidth={1.75} className={s.icon} aria-hidden="true" />
+              Открыть в браузере
+            </a>
+            <a
+              className={`btn btn-surface ${s.cta}`}
+              href={REPOSITORY_RELEASES_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <GitHubMark className={s.icon} />
+              Следить на GitHub
+            </a>
+          </>
         )}
       </Reveal>
       <Reveal delay={140}>

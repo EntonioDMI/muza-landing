@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  ChartLine,
   Heart,
   Home,
   LibraryBig,
@@ -21,7 +22,7 @@ import {
   SlidersHorizontal,
   Volume2,
 } from "lucide-react";
-import { DEMO_TRACKS, EXTRA_TILE, PLAYLISTS, formatTime } from "@/lib/demo";
+import { DEMO_TRACKS, EXTRA_TILE, FAVORITES_ROW, PLAYLISTS, formatTime } from "@/lib/demo";
 import s from "./AppMockup.module.css";
 
 /** Длительность «трека» в демо-цикле, сек */
@@ -98,16 +99,27 @@ export default function AppMockup() {
               <span>Поиск</span>
             </div>
             <div className={s.navItem}>
-              <Heart strokeWidth={1.75} />
-              <span>Любимое</span>
-            </div>
-            <div className={s.navItem}>
               <LibraryBig strokeWidth={1.75} />
               <span>Библиотека</span>
+            </div>
+            <div className={s.navItem}>
+              <ChartLine strokeWidth={1.75} />
+              <span>Статистика</span>
             </div>
             <div className={s.sideCaption}>
               <span>Плейлисты</span>
               <Plus strokeWidth={1.75} />
+            </div>
+            {/* «Любимое» — особая первая строка (не плейлист): сердце на
+                градиенте логотипа, как в приложении (2026-07-16) */}
+            <div className={s.plRow}>
+              <span className={s.plFav}>
+                <Heart strokeWidth={1.75} fill="currentColor" />
+              </span>
+              <span className={s.plMeta}>
+                <span className={s.plName}>{FAVORITES_ROW.name}</span>
+                <span className={s.plCount}>{FAVORITES_ROW.meta}</span>
+              </span>
             </div>
             {PLAYLISTS.map((p) => (
               <div key={p.id} className={s.plRow}>
@@ -144,7 +156,16 @@ export default function AppMockup() {
                     <img src={t.cover} alt="" className={s.tileCover} />
                     {i === trackIdx && (
                       <span className={s.tileBadge}>
-                        <Pause strokeWidth={1.75} fill="currentColor" />
+                        {paused ? (
+                          <Pause strokeWidth={1.75} fill="currentColor" />
+                        ) : (
+                          /* «играет» громче статичной паузы: три дышащие полоски */
+                          <span className={s.tileEq}>
+                            <i />
+                            <i />
+                            <i />
+                          </span>
+                        )}
                       </span>
                     )}
                   </span>

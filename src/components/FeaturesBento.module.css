@@ -3,8 +3,11 @@
 }
 
 .title {
+  /* H2 секций — единый дисплей-голос (унификация 2026-07-21) */
+  font-family: var(--font-display);
   font-size: clamp(1.6rem, 3.2vw, 2.25rem);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-display);
   margin-bottom: var(--sp-8);
 }
 
@@ -151,6 +154,39 @@
   border-radius: var(--r-md);
   margin-bottom: var(--sp-4);
   transition: border-radius var(--dur-base) var(--ease-out);
+}
+
+/* ── Тач: hover-сцен не существует — они играют сами ──
+   (критика 2026-07-21, Casey: на телефоне карточки были просто картинками) */
+
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .eqScene i {
+    animation: eqBreath 2.2s var(--ease-out) calc(var(--eq-i, 0) * 140ms) infinite alternate;
+  }
+
+  .rpcCover {
+    animation: rpcSway 3.6s var(--ease-out) infinite alternate;
+  }
+}
+
+@keyframes eqBreath {
+  from {
+    transform: scaleY(1);
+  }
+
+  to {
+    transform: scaleY(var(--eq-scale, 1));
+  }
+}
+
+@keyframes rpcSway {
+  from {
+    transform: none;
+  }
+
+  to {
+    transform: rotate(6deg) scale(1.08);
+  }
 }
 
 /* ── Адаптив ── */
