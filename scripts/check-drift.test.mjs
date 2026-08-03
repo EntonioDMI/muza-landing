@@ -8,7 +8,15 @@ globalThis.fetch = async () => {
   throw new Error("unexpected real network");
 };
 
-const { checkDrift, compareRelease, readLandingPage, readLatestRelease } = await import("./check-drift.mjs");
+const {
+  checkDrift,
+  compareRelease,
+  compareWebClient,
+  readCommitPosition,
+  readLandingPage,
+  readLatestRelease,
+  readWebClientStamp,
+} = await import("./check-drift.mjs");
 
 after(() => {
   globalThis.fetch = originalFetch;
@@ -16,6 +24,9 @@ after(() => {
 
 const LANDING_URL = "https://muza.lol/";
 const API_URL = "https://api.github.com/repos/EntonioDMI/muza-client/releases/latest";
+const STAMP_URL = "https://app.muza.lol/build-stamp.json";
+const COMPARE_URL = "https://api.github.com/repos/EntonioDMI/muza-client/compare/main...";
+const WEB_COMMIT = "4f0a91c2b7de3915608a4cd2ffb1e70a9c53d8b6";
 
 // Настоящие значения 15.07.2026: прод отдавал v0.1.2, Latest был уже v0.1.3.
 const OLD_TAG = "v0.1.2";
@@ -58,11 +69,27 @@ function response(body, { ok = true, status = 200, jsonError } = {}) {
   };
 }
 
-function routed({ release = releaseBody(), html = page(), calls } = {}) {
+// Штамп веб-клиента: собран из чистого дерева, с боевым адресом API, на коммите из main.
+function stampBody(overrides = {}) {
+  return {
+    commit: WEB_COMMIT,
+    ref: "v0.1.3-4-g4f0a91c",
+    dirty: false,
+    api: "https://api.muza.lol/api",
+    ...overrides,
+  };
+}
+
+function routed({ release = releaseBody(), html = page(), stamp = stampBody(), position = "behind", calls } = {}) {
   return async (url, init) => {
     calls?.push([url, init]);
     if (url === API_URL) return response(release);
     if (url === LANDING_URL) return response(html);
+    if (url === STAMP_URL) {
+      if (stamp === null) return response("", { ok: false, status: 404 });
+      return response(typeof stamp === "string" ? stamp : JSON.stringify(stamp));
+    }
+    if (url.startsWith(COMPARE_URL)) return response({ status: position });
     throw new Error(`unrouted url ${url}`);
   };
 }
@@ -150,17 +177,91 @@ describe("readLatestRelease and readLandingPage", () => {
   });
 });
 
+// Веб-клиент выкладывается на app.muza.lol руками, и до 03.08.2026 у него не было ни
+// штампа, ни сверки: собрали из грязного дерева, со старым адресом сервера или с
+// коммита, которого нет в main — узнать было неоткуда.
+describe("web client build stamp", () => {
+  test("a clean build from main is current", () => {
+    const result = compareWebClient(stampBody(), "behind");
+    assert.equal(result.drifted, false);
+    assert.match(result.reason, /runs v0\.1\.3-4-g4f0a91c from main \(behind\)/);
+    assert.equal(compareWebClient(stampBody(), "identical").drifted, false);
+  });
+
+  test("dirty tree, foreign API url and off-main commit are drift", () => {
+    const dirty = compareWebClient(stampBody({ dirty: true }), "behind");
+    assert.equal(dirty.drifted, true);
+    assert.match(dirty.reason, /uncommitted changes/);
+
+    for (const api of ["http://localhost:8000/api", "https://api.muza.lol", ""]) {
+      const wrong = compareWebClient(stampBody({ api }), "behind");
+      assert.equal(wrong.drifted, true);
+      assert.match(wrong.reason, /expected https:\/\/api\.muza\.lol\/api/);
+    }
+
+    for (const position of ["diverged", "ahead", "unknown"]) {
+      const off = compareWebClient(stampBody(), position);
+      assert.equal(off.drifted, true);
+      assert.match(off.reason, new RegExp(`"${position}" against main`));
+    }
+  });
+
+  test("a site without any stamp is drift, not a failed check", async () => {
+    assert.equal(await readWebClientStamp(routed({ stamp: null })), null);
+    const result = compareWebClient(null, null);
+    assert.equal(result.drifted, true);
+    assert.match(result.reason, /publishes no build stamp/);
+  });
+
+  test("stamp request is bounded and only 404 is tolerated", async () => {
+    const calls = [];
+    const stamp = await readWebClientStamp(routed({ calls }));
+    assert.deepEqual(stamp, { commit: WEB_COMMIT, ref: "v0.1.3-4-g4f0a91c", dirty: false, api: "https://api.muza.lol/api" });
+    assert.equal(calls[0][0], STAMP_URL);
+    assert.ok(calls[0][1].signal instanceof AbortSignal);
+
+    for (const status of [500, 502, 403]) {
+      await assert.rejects(() => readWebClientStamp(async () => response("", { ok: false, status })));
+    }
+  });
+
+  test("malformed stamps reject instead of passing silently", async () => {
+    for (const stamp of [
+      "not json",
+      JSON.stringify([]),
+      JSON.stringify(stampBody({ commit: undefined })),
+      JSON.stringify(stampBody({ commit: "abc" })),
+      JSON.stringify(stampBody({ commit: WEB_COMMIT.toUpperCase() })),
+      JSON.stringify(stampBody({ dirty: "false" })),
+      JSON.stringify(stampBody({ api: undefined })),
+    ]) {
+      await assert.rejects(() => readWebClientStamp(routed({ stamp })));
+    }
+  });
+
+  test("commit position comes from the GitHub compare endpoint", async () => {
+    const calls = [];
+    assert.equal(await readCommitPosition(routed({ calls, position: "behind" }), WEB_COMMIT), "behind");
+    assert.equal(calls[0][0], `${COMPARE_URL}${WEB_COMMIT}`);
+    await assert.rejects(() => readCommitPosition(async () => response({}), WEB_COMMIT));
+    await assert.rejects(() => readCommitPosition(async () => response({ status: "" }), WEB_COMMIT));
+    await assert.rejects(() => readCommitPosition(async () => response({}, { ok: false, status: 404 }), WEB_COMMIT));
+  });
+});
+
 describe("checkDrift", () => {
   test("requires fetchImpl and performs no ambient network", async () => {
     await assert.rejects(() => checkDrift({}));
     assert.equal(unexpectedNetworkCalls, 0);
   });
 
-  test("current landing reports no drift over exactly two requests", async () => {
+  test("both current sites report no drift over exactly four requests", async () => {
     const calls = [];
     const result = await checkDrift({ fetchImpl: routed({ calls }) });
     assert.equal(result.drifted, false);
-    assert.equal(calls.length, 2);
+    assert.equal(calls.length, 4);
+    assert.match(result.reason, /matching the published release/);
+    assert.match(result.reason, /app\.muza\.lol runs/);
     assert.equal(unexpectedNetworkCalls, 0);
   });
 
@@ -170,5 +271,20 @@ describe("checkDrift", () => {
     });
     assert.equal(result.drifted, true);
     assert.match(result.reason, /latest release is v0\.1\.3/);
+  });
+
+  test("a stale web client alone is enough to report drift", async () => {
+    const result = await checkDrift({ fetchImpl: routed({ position: "diverged" }) });
+    assert.equal(result.drifted, true);
+    assert.match(result.reason, /matching the published release/);
+    assert.match(result.reason, /"diverged" against main/);
+  });
+
+  test("a missing stamp costs no compare request", async () => {
+    const calls = [];
+    const result = await checkDrift({ fetchImpl: routed({ calls, stamp: null }) });
+    assert.equal(result.drifted, true);
+    assert.equal(calls.length, 3);
+    assert.equal(calls.filter(([url]) => url.startsWith(COMPARE_URL)).length, 0);
   });
 });

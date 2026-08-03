@@ -46,7 +46,14 @@ jobs:
         with:
           node-version: 24
 
+      # ⚠️ `shell: bash` обязателен: умолчание GitHub — `bash -e` БЕЗ `-o pipefail`,
+      # pipefail включается только при явном `shell: bash`. Без него код возврата
+      # конвейера равен коду `tee` — всегда 0, и упавший резолв (403 от GitHub API,
+      # таймаут) остаётся зелёным шагом с ПУСТЫМ окружением. Дальше пустые
+      # NEXT_PUBLIC_MUZA_RELEASE_* дают релиз «готовится»: verify-release.mjs
+      # выходит до всякой проверки, сборка зелёная, но БЕЗ кнопки скачивания.
       - name: Резолв Latest-релиза в build-env
+        shell: bash
         run: node scripts/resolve-release.mjs | tee -a "$GITHUB_ENV"
 
       - name: Сверить со штампом опубликованной сборки
@@ -88,6 +95,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -eu
+          # Тег обязан быть непустым ДО всего остального. `set -u` ловит только
+          # ОТСУТСТВУЮЩУЮ переменную; заведись она пустой — гард ниже выродился бы
+          # в `grep -q "Muza "`, а это совпадает даже со страницей «релиз готовится»
+          # (проверено: 15 совпадений в реальном out/index.html без кнопки),
+          # и в ветку deploy уехала бы сборка без кнопки скачивания.
+          test -n "${NEXT_PUBLIC_MUZA_RELEASE_TAG}"
           echo "${NEXT_PUBLIC_MUZA_RELEASE_TAG} ${GITHUB_SHA}" > out/DEPLOY-STAMP
           # Гард перед публикацией: в собранном HTML действительно запечён резолвнутый тег.
           grep -q "Muza ${NEXT_PUBLIC_MUZA_RELEASE_TAG}" out/index.html

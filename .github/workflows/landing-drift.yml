@@ -13,6 +13,10 @@ name: landing-drift
 # забирает её по крону (muza-landing-pull.sh). Этот сторож остаётся независимой
 # сигнализацией по ЖИВОЙ странице: он ловит поломку ЛЮБОГО звена той трубы.
 #
+# С 03.08.2026 целей две: muza.lol сверяется с последним релизом, app.muza.lol —
+# со своим штампом сборки (чистое ли дерево, тот ли адрес сервера, лежит ли коммит
+# в main). Веб-клиент выкладывается руками, и это единственная его проверка вообще.
+#
 # ⚠️ GitHub отключает schedule в репозитории без коммитов 60 дней, предупредив
 # письмом. Лендинг правится редко — если письмо пришло, воркфлоу надо включить
 # обратно, иначе сигнализация умрёт молча. workflow_dispatch работает всегда.
@@ -38,21 +42,30 @@ jobs:
           node-version: 24
 
       # pnpm install не нужен: проверке хватает встроенного fetch, зависимостей у неё нет.
-      - name: Сверить muza.lol с последним релизом
+      #
+      # ⚠️ `shell: bash` здесь обязателен и это НЕ косметика. Умолчание GitHub для
+      # Linux — `bash -e` БЕЗ `-o pipefail`; pipefail включается только при явном
+      # `shell: bash`. Код возврата конвейера без pipefail — это код ПОСЛЕДНЕЙ
+      # команды, то есть `tee`, а он всегда 0. Расхождение же check-drift.mjs
+      # сигналит ТОЛЬКО кодом возврата. Итог без этой строки: шаг вечно зелёный,
+      # `steps.check.outcome == 'failure'` не наступает никогда, issue не заводится
+      # ни разу — 19 прогонов подряд зелёные при живой сигнализации.
+      - name: Сверить muza.lol и app.muza.lol с последним релизом
         id: check
+        shell: bash
         continue-on-error: true
         run: node scripts/check-drift.mjs 2>&1 | tee drift.txt
 
-      - name: Завести issue, если лендинг отстал
+      - name: Завести issue, если выложенное отстало
         if: steps.check.outcome == 'failure'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TITLE: Лендинг отстал от опубликованного релиза
+          TITLE: Выложенное на muza.lol или app.muza.lol отстало
         run: |
           # Упавшая проверка (сеть, лимит API) — НЕ расхождение. Красный прогон
           # владелец увидит и так; issue про несуществующую проблему заводить нельзя.
           # Префикс печатает check-drift.mjs — контракт между ним и этим шагом.
-          if ! grep -q "^Landing is stale:" drift.txt; then
+          if ! grep -q "^Muza deploy is stale:" drift.txt; then
             echo "::error::Проверка не отработала — это не расхождение, issue не заводим"
             exit 1
           fi
@@ -70,9 +83,9 @@ jobs:
           {
             cat drift.txt
             echo
-            echo 'Лендинг запекает версию, размер и sha256 в HTML на сборке — сам новый релиз он не подхватит.'
+            echo '**Если отстал лендинг (`muza.lol`):** он запекает версию, размер и sha256 в HTML на сборке — сам новый релиз не подхватит. Починка: собрать `muza-landing` с `NEXT_PUBLIC_MUZA_RELEASE_{TAG,URL,SHA256,SIZE}` от текущего релиза (гейт `scripts/verify-release.mjs` сверит их с GitHub API) и заменить `/var/www/muza-landing` на muza_2, оставив бэкап. Обычно это делает `landing-rebuild.yml` сам — если он молчит, смотреть его прогоны.'
             echo
-            echo '**Починка:** собрать `muza-landing` с `NEXT_PUBLIC_MUZA_RELEASE_{TAG,URL,SHA256,SIZE}` от текущего релиза (гейт `scripts/verify-release.mjs` сверит их с GitHub API) и заменить `/var/www/muza-landing` на muza_2, оставив бэкап.'
+            echo '**Если отстал веб-клиент (`app.muza.lol`):** он выкладывается руками. Пересобрать `muza-client/apps/web` из ЧИСТОГО дерева на коммите из `main` и с `NEXT_PUBLIC_API_URL=https://api.muza.lol/api`, выложить `out/` целиком — вместе со штампом `build-stamp.json`, по нему и работает эта сверка.'
             echo
             echo "Прогон: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           } > body.md
