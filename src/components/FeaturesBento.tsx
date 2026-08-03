@@ -60,7 +60,9 @@ export default function FeaturesBento() {
               <span className={s.rpcDot} />
               <span className={s.rpcCoverWrap}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/covers/cover-1.png" alt="" className={s.rpcCover} />
+                {/* обложка обязана совпадать с подписью рядом: «Стеклянный
+                    дом — Мира» — это cover-3 (см. lib/demo.ts) */}
+                <img src="/covers/cover-3.png" alt="" className={s.rpcCover} />
               </span>
               <span className={s.rpcMeta}>
                 <span className={s.rpcLine1}>Играет в Muza</span>
@@ -94,9 +96,18 @@ export default function FeaturesBento() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/art/hotkeys.webp" alt="" className={s.artScene} loading="lazy" />
             <h3 className={s.cardTitle}>Всё с клавиатуры</h3>
+            {/* Обещать «глобальные хоткеи» было нельзя: плагина глобальных
+                сочетаний в клиенте нет (Cargo.toml, capabilities/main.json), и
+                сами сочетания — обычное событие клавиатуры в окне
+                (packages/app/src/lib/hotkeys.ts). Вне окна работают ТОЛЬКО
+                медиаклавиши через системную плашку, и там ровно четыре
+                действия (player/useMediaSession.ts): пуск/пауза, назад,
+                вперёд, перемотка. «Громкости» нет и в самом списке действий —
+                там «без звука». */}
             <p className={s.cardText}>
-              Пауза, поиск, лайк, громкость — глобальные хоткеи работают, даже
-              когда окно свёрнуто.
+              Пауза, следующий, лайк, поиск — любое сочетание можно переназначить
+              под себя. Свернул окно — остаются медиаклавиши: пауза, назад,
+              вперёд.
             </p>
           </article>
         </Reveal>
