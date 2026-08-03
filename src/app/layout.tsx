@@ -3,9 +3,13 @@ import "@fontsource/golos-text/400.css";
 import "@fontsource/golos-text/500.css";
 import "@fontsource/golos-text/600.css";
 import "@fontsource/golos-text/700.css";
-import "@fontsource/unbounded/500.css";
+/* Unbounded — только 600: все 12 мест с --font-display набраны --fw-semibold,
+   начертания 500 и 700 не звал никто, а весили как весь остальной текст
+   страницы. Единственный, кому они доставались, — демо-переключатель шрифта
+   в «Твоей Muza»: он делает Unbounded шрифтом всего лендинга, и теперь та
+   превьюшка рисуется одним начертанием. Меняешь --fw-* у --font-display —
+   подключи здесь и нужный вес, иначе браузер дорисует его синтетически. */
 import "@fontsource/unbounded/600.css";
-import "@fontsource/unbounded/700.css";
 import "./globals.css";
 
 const SITE_URL = "https://muza.lol";
