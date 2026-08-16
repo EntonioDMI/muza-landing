@@ -63,20 +63,49 @@ describe("verifyRelease", () => {
     assert.equal(unexpectedNetworkCalls, 0);
   });
 
-  test("preparing performs zero fetches", async () => {
+  const PREPARING = { kind: "preparing", repositoryUrl: "https://github.com/EntonioDMI/muza-client" };
+
+  test("preparing passes only while no stable release exists (404)", async () => {
     let calls = 0;
     const result = await verifyRelease({
       env: {},
       fetchImpl: async () => {
         calls += 1;
-        throw new Error("fetch must not run");
+        return { ok: false, status: 404, json: async () => ({}) };
       },
     });
-    assert.deepEqual(result, {
-      kind: "preparing",
-      repositoryUrl: "https://github.com/EntonioDMI/muza-client",
-    });
-    assert.equal(calls, 0);
+    assert.deepEqual(result, PREPARING);
+    assert.equal(calls, 1, "теперь запрос ОБЯЗАН быть: «релиза нет» надо доказать");
+  });
+
+  test("preparing rejects when a release is already published", async () => {
+    // Главный случай: переменные потерялись, а релиз есть. Раньше это молча
+    // выкладывало страницу «первый релиз готовится» при тринадцати релизах.
+    await assert.rejects(
+      verifyRelease({
+        env: {},
+        fetchImpl: async () => ({ ok: true, status: 200, json: async () => ({ tag_name: "v0.2.5" }) }),
+      }),
+      /v0\.2\.5 is published/,
+    );
+  });
+
+  test("preparing survives an unreachable GitHub", async () => {
+    // Недоступная сеть — не доказательство, что релиза нет. Сборку не роняем:
+    // иначе гейт превратился бы в требование интернета на каждую сборку.
+    for (const fetchImpl of [
+      async () => {
+        throw new Error("network down");
+      },
+      async () => ({ ok: false, status: 503, json: async () => ({}) }),
+      async () => ({ ok: true, status: 200, json: async () => ({ tag_name: 42 }) }),
+    ]) {
+      assert.deepEqual(await verifyRelease({ env: {}, fetchImpl }), PREPARING);
+    }
+  });
+
+  test("preparing without fetchImpl stays permissive", async () => {
+    assert.deepEqual(await verifyRelease({ env: {} }), PREPARING);
   });
 
   test("partial and invalid configuration reject before I/O", async () => {

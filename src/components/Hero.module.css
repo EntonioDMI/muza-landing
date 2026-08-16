@@ -30,6 +30,10 @@
   animation-delay: 240ms;
 }
 
+.warn {
+  animation-delay: 280ms;
+}
+
 @keyframes heroIn {
   from {
     opacity: 0;
@@ -130,6 +134,19 @@
   margin-top: var(--sp-4);
   font-size: var(--fs-caption);
   color: var(--text-2);
+}
+
+/* Предупреждение о SmartScreen. Третья ступень текста (--text-3) намеренно:
+   это не обещание и не призыв, а честная сноска у кнопки — она должна читаться,
+   не перетягивая внимание с самого действия. Ширина ограничена, чтобы строка не
+   растягивалась во весь герой и оставалась читаемой мерой. */
+.warn {
+  margin-top: var(--sp-2);
+  margin-inline: auto;
+  max-width: 46ch;
+  font-size: var(--fs-caption);
+  line-height: 1.5;
+  color: var(--text-3);
 }
 
 .mockupSlot {

@@ -28,6 +28,10 @@ const RADII = [
 /** Шрифт интерфейса: демо той самой настройки приложения — переключает
  *  --font-ui всего лендинга вместе с превью. */
 const FONTS = [
+  // Onest первым и по умолчанию — он основной шрифт продукта с 11.08.2026.
+  // До 15.08 его в списке не было вовсе, а дефолтом стоял Golos: демо
+  // «попробуй прямо здесь» показывало не то, что человек увидит в приложении.
+  { id: "onest", label: "Onest", family: `"Onest", "Segoe UI", system-ui, sans-serif` },
   { id: "golos", label: "Golos", family: `var(--font-golos, "Golos Text"), "Segoe UI", system-ui, sans-serif` },
   { id: "unbounded", label: "Unbounded", family: `var(--font-unbounded, "Unbounded"), "Segoe UI", system-ui, sans-serif` },
   { id: "system", label: "Системный", family: `"Segoe UI", system-ui, sans-serif` },
@@ -102,7 +106,7 @@ function nextRadioIndex(key: string, current: number, count: number): number {
   }
 }
 
-const DEFAULTS = { accent: "sky", radius: "soft", glass: 62, font: "golos" } as const;
+const DEFAULTS = { accent: "sky", radius: "soft", glass: 62, font: "onest" } as const;
 
 export default function CustomizeSection() {
   const [accent, setAccent] = useState<string>(DEFAULTS.accent);
@@ -187,7 +191,7 @@ export default function CustomizeSection() {
 
   useEffect(() => {
     const el = document.documentElement;
-    if (font === "golos") el.style.removeProperty("--font-ui");
+    if (font === "onest") el.style.removeProperty("--font-ui");
     else el.style.setProperty("--font-ui", FONTS.find((f) => f.id === font)?.family ?? "");
   }, [font]);
 

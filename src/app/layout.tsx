@@ -1,4 +1,14 @@
 import type { Metadata, Viewport } from "next";
+/* Onest — ОСНОВНОЙ шрифт продукта с 11.08.2026 (обоснование смены — в
+   packages/ui/src/tokens/fonts.css). Лендинг оставался на Golos четыре дня и
+   показывал продукт шрифтом, которого у продукта уже нет; хуже — его же
+   демо-переключатель «Шрифт» предлагал Golos / Unbounded / системный, и Onest
+   в списке не было вовсе, то есть единственное место страницы, где обещано
+   «попробуй прямо здесь», врало о дефолте. Веса те же четыре, что в ДС. */
+import "@fontsource/onest/400.css";
+import "@fontsource/onest/500.css";
+import "@fontsource/onest/600.css";
+import "@fontsource/onest/700.css";
 import "@fontsource/golos-text/400.css";
 import "@fontsource/golos-text/500.css";
 import "@fontsource/golos-text/600.css";
